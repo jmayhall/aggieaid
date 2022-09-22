@@ -1,4 +1,4 @@
-package edu.tamu.aggieaid.domain.dto;
+package edu.tamu.aggieaid.api.dto;
 
 import javax.validation.constraints.NotBlank;
 
