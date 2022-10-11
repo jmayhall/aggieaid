@@ -6,6 +6,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -14,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,6 +33,10 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -65,13 +70,29 @@ public class SecurityConfig {
     }
 
     @Bean
+    public FilterRegistrationBean corsFilter() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:8080");
+        config.addAllowedOrigin("http://localhost:3000"); // @Value: http://localhost:8080
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+        bean.setOrder(0);
+        return bean;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors()
-                .and()
             .csrf()
                 .disable()
             .authorizeRequests()
+
+                .antMatchers(POST, "/api/auth/register")
+                    .permitAll()
 
                 .antMatchers(POST, "/login")
                     .permitAll()
@@ -79,11 +100,11 @@ public class SecurityConfig {
                 .antMatchers(POST, "/logout")
                     .permitAll()
 
-                .antMatchers(GET, "/")
+                .antMatchers(GET, "/", "/explorer/**")
                     .permitAll()
 
-                .anyRequest()
-                    .denyAll()
+                // .anyRequest()
+                //     .denyAll()
 
             .and()
                 .rememberMe()
@@ -106,14 +127,17 @@ public class SecurityConfig {
 
                     })
             .and()
-                .formLogin(formLogin -> formLogin
+                .formLogin()
                     .passwordParameter("password")
                     .usernameParameter("usernameOrEmail")
+                    .loginProcessingUrl("/api/auth/login")
                     .successHandler(new CustomAuthenticationSuccessHandler())
-                    .failureHandler(new CustomAuthenticationFailureHandler()))
-                .logout(logout -> logout
-                    .logoutUrl("/logout")
-                    .addLogoutHandler(new CookieClearingLogoutHandler(new String[] { "JSESSION" })));
+                    .failureHandler(new CustomAuthenticationFailureHandler())
+                .and()
+                .logout()
+                    .deleteCookies("JSESSIONID")
+                    .invalidateHttpSession(true)
+                    .logoutUrl("/api/auth/logout");
 
         return http.build();
     }
@@ -157,7 +181,7 @@ public class SecurityConfig {
             HttpServletResponse response,
             AuthenticationException exception
         ) throws IOException, ServletException {
-            processAuthResponse(response, SC_UNAUTHORIZED, "Bad Credentials");
+            processAuthResponse(response, SC_UNAUTHORIZED, exception.getMessage());
         }
 
     }
