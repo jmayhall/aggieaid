@@ -6,7 +6,6 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -19,6 +18,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,11 +30,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
@@ -42,6 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.aggieaid.domain.User;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
+import edu.tamu.aggieaid.security.CustomAuthenticationProvider;
 import edu.tamu.aggieaid.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 
@@ -52,6 +51,9 @@ public class SecurityConfig {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private CustomAuthenticationProvider authProvider;
 
     @Autowired
     private DataSource dataSource;
@@ -86,9 +88,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
             .csrf()
                 .disable()
+            .headers()
+                .frameOptions()
+                .disable()
+            .and()
             .authorizeRequests()
 
                 .antMatchers(POST, "/api/auth/register")
@@ -104,7 +111,7 @@ public class SecurityConfig {
                     .permitAll()
 
                 // .anyRequest()
-                //     .denyAll()
+                //     .authenticated()
 
             .and()
                 .rememberMe()
@@ -147,11 +154,12 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration
-            .getAuthenticationManager();
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = 
+            http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(authProvider);
+        return authenticationManagerBuilder.build();
     }
 
     public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {

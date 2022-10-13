@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <RegisterComponent></RegisterComponent>
-      {/* <LoginComponent></LoginComponent> */}
+      <LoginComponent></LoginComponent>
     </div>
   );
 }

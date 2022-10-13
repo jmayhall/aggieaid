@@ -1,6 +1,5 @@
 import React from 'react';
-import './styles.css'
-import bcrypt from 'bcryptjs'
+import './styles.css';
 
 export default class LoginComponent extends React.Component {
 
@@ -9,7 +8,7 @@ export default class LoginComponent extends React.Component {
         const elements = e.target.elements;
         const formData = new FormData();
         formData.append('usernameOrEmail', elements.email.value);
-        formData.append('password', bcrypt.hashSync(elements.password.value));
+        formData.append('password', elements.password.value);
         try {
             const response = await fetch("http://localhost:8081/api/auth/login", {
                 method: 'POST',

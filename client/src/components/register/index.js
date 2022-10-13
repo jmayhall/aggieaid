@@ -1,6 +1,5 @@
 import React from 'react';
 import './styles.css'
-import bcrypt from 'bcryptjs'
 
 export default class RegisterComponent extends React.Component {
 
@@ -11,8 +10,8 @@ export default class RegisterComponent extends React.Component {
             name: elements.name.value,
             email: elements.email.value,
             emailConfirm: elements.confirmEmail.value,
-            password: bcrypt.hashSync(elements.password.value),
-            confirmPassword: bcrypt.hashSync(elements.confirmPassword.value)
+            password: elements.password.value,
+            confirmPassword: elements.confirmPassword.value
         }
         const requestJson = JSON.stringify(reqObj);
         console.log(requestJson);
