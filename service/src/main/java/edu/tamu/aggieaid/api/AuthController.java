@@ -1,11 +1,8 @@
 package edu.tamu.aggieaid.api;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +24,6 @@ import edu.tamu.aggieaid.api.dto.LoginDTO;
 import edu.tamu.aggieaid.api.dto.NewUserDTO;
 import edu.tamu.aggieaid.domain.User;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
-import edu.tamu.aggieaid.security.UserDetailsImpl;
 import edu.tamu.aggieaid.utils.JwtUtils;
 
 @RestController
@@ -70,20 +66,20 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();    
+        User userDetails = (User) authentication.getPrincipal();    
 
         System.out.println(userDetails);
 
-        List<String> roles = userDetails.getAuthorities().stream()
-            .map(item -> item.getAuthority())
-            .collect(Collectors.toList());
+        // List<String> roles = userDetails.getAuthorities().stream()
+        //     .map(item -> item.getAuthority())
+        //     .collect(Collectors.toList());
 
         return ResponseEntity.ok(JwtDTO.builder()
                                     .token(jwt)
                                     .id(userDetails.getId())
                                     .username(userDetails.getUsername())
                                     .email(userDetails.getEmail())
-                                    .roles(roles)
+                                    .roles(new ArrayList<>())
                                     .build());
     }
 
