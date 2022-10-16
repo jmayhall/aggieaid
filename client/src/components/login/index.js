@@ -6,13 +6,17 @@ export default class LoginComponent extends React.Component {
     async handleSubmit(e) {
         e.preventDefault();
         const elements = e.target.elements;
-        const formData = new FormData();
-        formData.append('email', elements.email.value);
-        formData.append('password', window.btoa(elements.password.value));
+        const reqObj = {
+            email: elements.email.value,
+            password:  window.btoa(elements.password.value)
+        }
         try {
             const response = await fetch("http://localhost:8081/api/auth/login", {
                 method: 'POST',
-                body: formData
+                body: JSON.stringify(reqObj),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
             const responseText = await response.text();
             console.log(responseText);

@@ -44,153 +44,156 @@ import edu.tamu.aggieaid.security.CustomAuthenticationProvider;
 import edu.tamu.aggieaid.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 
-@Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
-public class SecurityConfig {
+// @Configuration
+// @EnableWebSecurity
+// @RequiredArgsConstructor
+// public class SecurityConfig {
 
-    @Autowired
-    private UserRepo userRepo;
+//     @Autowired
+//     UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+//     @Autowired
+//     private UserRepo userRepo;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+//     @Autowired
+//     private CustomUserDetailsService userDetailsService;
 
-    @Autowired
-    private DataSource dataSource;
+//     @Autowired
+//     private ObjectMapper objectMapper;
 
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
-        db.setDataSource(dataSource);
-        return db;
-    }
+//     @Autowired
+//     private DataSource dataSource;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//     @Bean
+//     public PersistentTokenRepository persistentTokenRepository() {
+//         JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+//         db.setDataSource(dataSource);
+//         return db;
+//     }
 
-        http
-            .cors()
-                .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
-            .and()
-            .csrf()
-                .disable()
-            .headers()
-                .frameOptions()
-                .disable()
-            .and()
-                .authorizeRequests()
+//     @Bean
+//     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-                    .antMatchers(POST, "/api/auth/register")
-                        .permitAll()
+//         http
+//             .cors()
+//                 .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+//             .and()
+//             .csrf()
+//                 .disable()
+//             .headers()
+//                 .frameOptions()
+//                 .disable()
+//             .and()
+//                 .authorizeRequests()
 
-                    .antMatchers(POST, "/api/auth/login")
-                        .permitAll()
+//                     .antMatchers(POST, "/api/auth/register")
+//                         .permitAll()
+
+//                     .antMatchers(POST, "/api/auth/login")
+//                         .permitAll()
                     
-                    .antMatchers(POST, "/api/auth/logout")
-                        .permitAll()
+//                     .antMatchers(POST, "/api/auth/logout")
+//                         .permitAll()
 
-                    .antMatchers(GET, "/", "/explorer/**")
-                        .permitAll()
+//                     .antMatchers(GET, "/", "/explorer/**")
+//                         .permitAll()
 
-                    .anyRequest()
-                        .authenticated()
+//                     .anyRequest()
+//                         .authenticated()
 
-            .and()
-                .rememberMe()
-                    .rememberMeParameter("rememberme")
-                    .rememberMeCookieName("REMEMBERME")
-                    .tokenRepository(persistentTokenRepository())
-                    .userDetailsService(userDetailsService)
-            .and()
-                .exceptionHandling()
-                    .authenticationEntryPoint(new AuthenticationEntryPoint() {
+//             .and()
+//                 .rememberMe()
+//                     .rememberMeParameter("rememberme")
+//                     .rememberMeCookieName("REMEMBERME")
+//                     .tokenRepository(persistentTokenRepository())
+//                     .userDetailsService(userDetailsService)
+//             .and()
+//                 .exceptionHandling()
+//                     .authenticationEntryPoint(new AuthenticationEntryPoint() {
 
-                        @Override
-                        public void commence(
-                            HttpServletRequest request,
-                            HttpServletResponse response,
-                            AuthenticationException authException
-                        ) throws IOException, ServletException {
-                            processAuthResponse(response, SC_UNAUTHORIZED, "Authentication is required");
-                        }
+//                         @Override
+//                         public void commence(
+//                             HttpServletRequest request,
+//                             HttpServletResponse response,
+//                             AuthenticationException authException
+//                         ) throws IOException, ServletException {
+//                             processAuthResponse(response, SC_UNAUTHORIZED, "Authentication is required");
+//                         }
 
-                    })
-            .and()
-                .formLogin()
-                    .usernameParameter("email")
-                    .passwordParameter("password")
-                    .loginProcessingUrl("/api/auth/login")
-                    .successHandler(new CustomAuthenticationSuccessHandler())
-                    .failureHandler(new CustomAuthenticationFailureHandler())
-            .and()
-                .logout()
-                    .addLogoutHandler(new CookieClearingLogoutHandler(new String[] { "JSESSION" }))
-                    .deleteCookies("JSESSION")
-                    .invalidateHttpSession(true)
-                    .logoutUrl("/api/auth/logout");
+//                     })
+//             .and()
+//                 .formLogin()
+//                     .usernameParameter("email")
+//                     .passwordParameter("password")
+//                     .loginProcessingUrl("/api/auth/login")
+//                     .successHandler(new CustomAuthenticationSuccessHandler())
+//                     .failureHandler(new CustomAuthenticationFailureHandler())
+//             .and()
+//                 .logout()
+//                     .addLogoutHandler(new CookieClearingLogoutHandler(new String[] { "JSESSION" }))
+//                     .deleteCookies("JSESSION")
+//                     .invalidateHttpSession(true)
+//                     .logoutUrl("/api/auth/logout");
 
-        return http.build();
-    }
+//         return http.build();
+//     }
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
+//     @Bean
+//     public PasswordEncoder encoder() {
+//         return new BCryptPasswordEncoder();
+//     }
 
-    @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(encoder())
-            .and()
-            .authenticationProvider(new CustomAuthenticationProvider());
-        return authenticationManagerBuilder.build();
-    }
+//     @Bean
+//     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+//         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+//         authenticationManagerBuilder
+//             .userDetailsService(userDetailsService)
+//             .passwordEncoder(encoder())
+//             .and()
+//             .authenticationProvider(new CustomAuthenticationProvider());
+//         return authenticationManagerBuilder.build();
+//     }
 
-    public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+//     public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-        @Override
-        public void onAuthenticationSuccess(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication
-        ) throws IOException, ServletException {
-            Optional<User> user = userRepo.findByEmail(((User)authentication.getPrincipal()).getName());
-            if(user.isPresent()) {
-                String body = objectMapper.writeValueAsString(user.get());
-                processAuthResponse(response, SC_OK, body);    
-            } else {
-                processAuthResponse(response, SC_OK, "User not found:" + ((User)authentication.getPrincipal()).getName());
-            }
-        }
-    }
+//         @Override
+//         public void onAuthenticationSuccess(
+//             HttpServletRequest request,
+//             HttpServletResponse response,
+//             Authentication authentication
+//         ) throws IOException, ServletException {
+//             Optional<User> user = userRepo.findByEmail(((User)authentication.getPrincipal()).getName());
+//             if(user.isPresent()) {
+//                 String body = objectMapper.writeValueAsString(user.get());
+//                 processAuthResponse(response, SC_OK, body);    
+//             } else {
+//                 processAuthResponse(response, SC_OK, "User not found:" + ((User)authentication.getPrincipal()).getName());
+//             }
+//         }
+//     }
 
-    public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
+//     public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-        @Override
-        public void onAuthenticationFailure(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException exception
-        ) throws IOException, ServletException {
-            Map<String, Object> data = new HashMap<>();
-            data.put("timestamp", Calendar.getInstance().getTime());
-            data.put("exception", exception.getMessage());
-            processAuthResponse(response, SC_UNAUTHORIZED, objectMapper.writeValueAsString(data));
-        }
+//         @Override
+//         public void onAuthenticationFailure(
+//             HttpServletRequest request,
+//             HttpServletResponse response,
+//             AuthenticationException exception
+//         ) throws IOException, ServletException {
+//             Map<String, Object> data = new HashMap<>();
+//             data.put("timestamp", Calendar.getInstance().getTime());
+//             data.put("exception", exception.getMessage());
+//             processAuthResponse(response, SC_UNAUTHORIZED, objectMapper.writeValueAsString(data));
+//         }
 
-    }
+//     }
 
-    private void processAuthResponse(HttpServletResponse response, int status, String body) throws IOException {
-        System.out.println(body);
-        response.setStatus(status);
-        response
-            .getOutputStream()
-            .println(body);
-    }
+//     private void processAuthResponse(HttpServletResponse response, int status, String body) throws IOException {
+//         System.out.println(body);
+//         response.setStatus(status);
+//         response
+//             .getOutputStream()
+//             .println(body);
+//     }
 
-}
+// }
