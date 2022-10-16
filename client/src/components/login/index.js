@@ -7,12 +7,11 @@ export default class LoginComponent extends React.Component {
         e.preventDefault();
         const elements = e.target.elements;
         const formData = new FormData();
-        formData.append('usernameOrEmail', elements.email.value);
-        formData.append('password', elements.password.value);
+        formData.append('email', elements.email.value);
+        formData.append('password', window.btoa(elements.password.value));
         try {
             const response = await fetch("http://localhost:8081/api/auth/login", {
                 method: 'POST',
-                mode: 'no-cors',
                 body: formData
             });
             const responseText = await response.text();

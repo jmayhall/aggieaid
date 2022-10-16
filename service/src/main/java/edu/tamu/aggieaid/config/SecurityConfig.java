@@ -6,6 +6,9 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.ServletException;
@@ -14,12 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
@@ -30,11 +31,10 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -50,19 +50,16 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     @Autowired
+    private UserRepo userRepo;
+
+    @Autowired
     private CustomUserDetailsService userDetailsService;
-
-    @Autowired
-    private CustomAuthenticationProvider authProvider;
-
-    @Autowired
-    private DataSource dataSource;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
-    private UserRepo userRepo;
+    private DataSource dataSource;
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
@@ -72,46 +69,34 @@ public class SecurityConfig {
     }
 
     @Bean
-    public FilterRegistrationBean corsFilter() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:8080");
-        config.addAllowedOrigin("http://localhost:3000"); // @Value: http://localhost:8080
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/**", config);
-        FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
-        bean.setOrder(0);
-        return bean;
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+            .cors()
+                .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+            .and()
             .csrf()
                 .disable()
             .headers()
                 .frameOptions()
                 .disable()
             .and()
-            .authorizeRequests()
+                .authorizeRequests()
 
-                .antMatchers(POST, "/api/auth/register")
-                    .permitAll()
+                    .antMatchers(POST, "/api/auth/register")
+                        .permitAll()
 
-                .antMatchers(POST, "/login")
-                    .permitAll()
-                
-                .antMatchers(POST, "/logout")
-                    .permitAll()
+                    .antMatchers(POST, "/api/auth/login")
+                        .permitAll()
+                    
+                    .antMatchers(POST, "/api/auth/logout")
+                        .permitAll()
 
-                .antMatchers(GET, "/", "/explorer/**")
-                    .permitAll()
+                    .antMatchers(GET, "/", "/explorer/**")
+                        .permitAll()
 
-                // .anyRequest()
-                //     .authenticated()
+                    .anyRequest()
+                        .authenticated()
 
             .and()
                 .rememberMe()
@@ -135,14 +120,15 @@ public class SecurityConfig {
                     })
             .and()
                 .formLogin()
+                    .usernameParameter("email")
                     .passwordParameter("password")
-                    .usernameParameter("usernameOrEmail")
                     .loginProcessingUrl("/api/auth/login")
                     .successHandler(new CustomAuthenticationSuccessHandler())
                     .failureHandler(new CustomAuthenticationFailureHandler())
-                .and()
+            .and()
                 .logout()
-                    .deleteCookies("JSESSIONID")
+                    .addLogoutHandler(new CookieClearingLogoutHandler(new String[] { "JSESSION" }))
+                    .deleteCookies("JSESSION")
                     .invalidateHttpSession(true)
                     .logoutUrl("/api/auth/logout");
 
@@ -156,9 +142,12 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = 
-            http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(authProvider);
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(encoder())
+            .and()
+            .authenticationProvider(new CustomAuthenticationProvider());
         return authenticationManagerBuilder.build();
     }
 
@@ -170,13 +159,12 @@ public class SecurityConfig {
             HttpServletResponse response,
             Authentication authentication
         ) throws IOException, ServletException {
-            String email = ((User) authentication.getPrincipal()).getEmail();
-            Optional<User> user = userRepo.findByEmail(email);
+            Optional<User> user = userRepo.findByEmail(((User)authentication.getPrincipal()).getName());
             if(user.isPresent()) {
                 String body = objectMapper.writeValueAsString(user.get());
-                processAuthResponse(response, SC_OK, body);
-            } else  {
-                processAuthResponse(response, SC_UNAUTHORIZED, "Could not find user" + email);
+                processAuthResponse(response, SC_OK, body);    
+            } else {
+                processAuthResponse(response, SC_OK, "User not found:" + ((User)authentication.getPrincipal()).getName());
             }
         }
     }
@@ -189,16 +177,20 @@ public class SecurityConfig {
             HttpServletResponse response,
             AuthenticationException exception
         ) throws IOException, ServletException {
-            processAuthResponse(response, SC_UNAUTHORIZED, exception.getMessage());
+            Map<String, Object> data = new HashMap<>();
+            data.put("timestamp", Calendar.getInstance().getTime());
+            data.put("exception", exception.getMessage());
+            processAuthResponse(response, SC_UNAUTHORIZED, objectMapper.writeValueAsString(data));
         }
 
     }
 
     private void processAuthResponse(HttpServletResponse response, int status, String body) throws IOException {
+        System.out.println(body);
         response.setStatus(status);
-        response.getWriter().write(body);
-        response.getWriter().flush();
-        response.getWriter().close();
+        response
+            .getOutputStream()
+            .println(body);
     }
 
 }

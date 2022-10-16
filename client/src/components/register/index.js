@@ -10,7 +10,7 @@ export default class RegisterComponent extends React.Component {
             name: elements.name.value,
             email: elements.email.value,
             emailConfirm: elements.confirmEmail.value,
-            password: elements.password.value,
+            password: window.btoa(elements.password.value),
             confirmPassword: elements.confirmPassword.value
         }
         const requestJson = JSON.stringify(reqObj);
