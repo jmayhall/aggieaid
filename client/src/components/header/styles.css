@@ -1,0 +1,18 @@
+.HeaderComponent .bi.bi-search {
+    color: white;
+    padding: 7px;
+    font-size: 16px;
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+.HeaderComponent .logo {
+    max-width: 28px;
+    margin-right: 5px;
+    vertical-align: text-bottom;
+
+}
+
+.HeaderComponent.bg-dark  {
+    background-color: #500000 !important;
+}
