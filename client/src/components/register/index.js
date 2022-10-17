@@ -1,34 +1,19 @@
 import React from 'react';
 import './styles.css'
+import AuthService from '../../service/auth.service';
 
 export default class RegisterComponent extends React.Component {
 
     async handleSubmit(e) {
         e.preventDefault();
         const elements = e.target.elements;
-        const reqObj = {
-            name: elements.name.value,
-            email: elements.email.value,
-            emailConfirm: elements.confirmEmail.value,
-            password: window.btoa(elements.password.value),
-            confirmPassword: elements.confirmPassword.value
-        }
-        const requestJson = JSON.stringify(reqObj);
-        console.log(requestJson);
-        try {
-            const response = await fetch("http://localhost:8081/api/auth/register", {
-                method: "POST",
-                body: requestJson,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const responseText = await response.text();
-            console.log(responseText);
+        AuthService.register(
+            elements.email.name, 
+            elements.email.value, 
+            elements.password.value
+        ).then(() => {
             e.target.reset();
-        } catch (ex) {
-            console.error("POST error!");
-        }
+        });        
     }
 
 

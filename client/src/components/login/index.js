@@ -1,29 +1,16 @@
 import React from 'react';
 import './styles.css';
+import AuthService from '../../service/auth.service';
 
 export default class LoginComponent extends React.Component {
 
     async handleSubmit(e) {
         e.preventDefault();
         const elements = e.target.elements;
-        const reqObj = {
-            email: elements.email.value,
-            password:  window.btoa(elements.password.value)
-        }
-        try {
-            const response = await fetch("http://localhost:8081/api/auth/login", {
-                method: 'POST',
-                body: JSON.stringify(reqObj),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+        AuthService.login(elements.email.value, elements.password.value)
+            .then(() => {
+                e.target.reset();
             });
-            const responseText = await response.text();
-            console.log(responseText);
-            e.target.reset();
-        } catch (ex) {
-            console.error("POST error!");
-        }
     }
     
     render() {
