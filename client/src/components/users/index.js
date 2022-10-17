@@ -3,7 +3,7 @@ import './styles.css'
 import ApiService from '../../service/api.service';
 import APIPaths from '../../constants/apipath.constants';
 
-export default class RegisterComponent extends React.Component {
+export default class UsersComponent extends React.Component {
 
     async handleClick(e) {
         ApiService.get(APIPaths.USERS).then(r => {
