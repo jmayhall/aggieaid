@@ -8,9 +8,9 @@
 
 .HeaderComponent .logo {
     max-width: 28px;
+    height: auto;
     margin-right: 5px;
     vertical-align: text-bottom;
-
 }
 
 .HeaderComponent.bg-dark  {

@@ -1,7 +1,8 @@
 import React from 'react';
 import './styles.css'
-import {Link } from "react-router-dom";
-import AggieAidLogo from '../shared/images/logo.svg';
+import { Link } from "react-router-dom";
+import { ReactComponent as AggieAidLogo } from '../shared/images/aggie-aid-logo.svg';
+
 
 export default class HeaderComponent extends React.Component {
     render() {
@@ -9,7 +10,7 @@ export default class HeaderComponent extends React.Component {
             <nav className="HeaderComponent navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
                     <Link to={"/"} className="navbar-brand">
-                        <img className="logo" src={AggieAidLogo} alt="AggieAid Logo" />
+                        <AggieAidLogo className='logo'></AggieAidLogo>
                         AGGIE AID
                     </Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

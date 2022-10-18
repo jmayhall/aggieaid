@@ -1,0 +1,12 @@
+.HomeComponent .logo {
+    color: #500000;
+    height: auto;
+    min-width: 250px;
+    margin: auto;
+    padding: 0px 20px;
+}
+
+.HomeComponent .hero {
+    color: white;
+    background-image: radial-gradient(#707070, #3e3e3e);
+}
