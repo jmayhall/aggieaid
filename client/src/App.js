@@ -17,10 +17,11 @@ class App extends Component {
         <HeaderComponent></HeaderComponent>
 
         <Routes>
+          <Route path="*" element={<HeaderComponent />} />
           <Route path="/" element={<HomeComponent />} />
           <Route path="/home" element={<HomeComponent />} />
-          <Route path="/login" element={<SignInUpComponent />} />
-          <Route path="/register" element={<SignInUpComponent />} />
+          <Route path="/login" element={<SignInUpComponent activeTab='login' />} />
+          <Route path="/register" element={<SignInUpComponent activeTab='register' />} />
           <Route path="/create-event" element={
             <RequireAuth>
               <CreateEventComponent />

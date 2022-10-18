@@ -2,10 +2,43 @@ import React from 'react';
 import './styles.css'
 import { Link } from "react-router-dom";
 import { ReactComponent as AggieAidLogo } from '../shared/images/aggie-aid-logo.svg';
-
+import LogoutComponent from '../logout';
+import AuthService from '../../service/auth.service';
 
 export default class HeaderComponent extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.localStorageUpdated = this.localStorageUpdated.bind(this)
+        this.state = {
+            isLoggedIn: AuthService.isAuthenticated()
+        }
+    }
+
+    componentDidMount() {
+        if (typeof window !== 'undefined') {
+            window.addEventListener('storage', this.localStorageUpdated)
+        }
+    }
+
+    componentWillUnmount(){
+        if (typeof window !== 'undefined') {
+            window.removeEventListener('storage', this.localStorageUpdated)
+        }
+    }
+
+    localStorageUpdated(e){
+        console.log(e);
+        this.setState({
+            isLoggedIn: AuthService.isAuthenticated()
+        })
+    }
+
     render() {
+        const logInOutButton = this.state.isLoggedIn
+            ? <LogoutComponent></LogoutComponent>
+            : <Link className="btn btn-secondary btn-small navbar-btn" to={"/login"}>Login</Link>;
+
         return  (
             <nav className="HeaderComponent navbar navbar-expand-lg navbar-dark bg-dark">
                 <div className="container-fluid">
@@ -42,9 +75,7 @@ export default class HeaderComponent extends React.Component {
                                 </form>
                             </li>
                             <li className="nav-item">
-                                <Link className="btn btn-secondary btn-small navbar-btn" to={"/login"}>
-                                    Login
-                                </Link>
+                                {logInOutButton} 
                             </li>
                         </ul>
                     </div>

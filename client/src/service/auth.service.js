@@ -13,6 +13,7 @@ export default class AuthService {
         reqPromise.then(r => {
             r.json().then(u => {
                 localStorage.setItem(StorageKeys.USER, JSON.stringify(u));
+                window.dispatchEvent( new Event('storage') );
             })
         });
 
@@ -20,7 +21,8 @@ export default class AuthService {
     }
 
     static logout() {
-        localStorage.removeItem(StorageKeys.USER)
+        localStorage.removeItem(StorageKeys.USER);
+        window.dispatchEvent( new Event('storage') );
     }
 
     static async register(name, email, password) {
@@ -29,6 +31,10 @@ export default class AuthService {
             email: email,
             password: window.btoa(password)
         });
+    }
+
+    static isAuthenticated() {
+        return !!this.getCurrentUser();
     }
 
     static getCurrentUser() {

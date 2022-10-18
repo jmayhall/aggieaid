@@ -1,15 +1,22 @@
 import React from 'react';
 import './styles.css';
 import AuthService from '../../service/auth.service';
+import { withNavigation } from '../../helpers/hocs';
 
-export default class LoginComponent extends React.Component {
+class LoginComponent extends React.Component {
 
-    async handleSubmit(e) {
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(e) {
+        console.log(LoginComponent);
         e.preventDefault();
         const elements = e.target.elements;
         AuthService.login(elements.email.value, elements.password.value)
             .then(() => {
-                e.target.reset();
+                this.props.navigate('/');
             });
     }
     
@@ -34,3 +41,5 @@ export default class LoginComponent extends React.Component {
         );
     }
 }
+
+export default withNavigation(LoginComponent);
