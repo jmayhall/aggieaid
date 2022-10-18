@@ -7,6 +7,7 @@ import HeaderComponent from './components/header';
 import CreateEventComponent from './components/create-event';
 import FindEventComponent from './components/find-event';
 import AboutUsComponent from './components/aboutus';
+import RequireAuth from './components/require-auth';
 
 class App extends Component {
   render() {
@@ -20,7 +21,11 @@ class App extends Component {
           <Route path="/home" element={<HomeComponent />} />
           <Route path="/login" element={<SignInUpComponent />} />
           <Route path="/register" element={<SignInUpComponent />} />
-          <Route path="/create-event" element={<CreateEventComponent />} />
+          <Route path="/create-event" element={
+            <RequireAuth>
+              <CreateEventComponent />
+            </RequireAuth>
+          } />
           <Route path="/find-event" element={<FindEventComponent />} />
           <Route path="/about-us" element={<AboutUsComponent />} />
         </Routes>
