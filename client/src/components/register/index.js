@@ -47,7 +47,7 @@ export default class RegisterComponent extends React.Component {
                         <input name="confirmPassword" type="password" className="form-control" id="confirmPasswordInput" aria-describedby="confirmPasswordHelp" placeholder="Confirm password" />
                         <small id="confirmPasswordHelp" className="form-text text-muted">Please confirm your password</small>
                     </div>
-                    <button type="submit" className="btn btn-primary">Create</button>
+                    <button type="submit" className="btn btn-primary action">Create</button>
                 </form>
             </div>
         );

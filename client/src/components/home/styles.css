@@ -1,12 +1,26 @@
 .HomeComponent .logo {
     color: #500000;
     height: auto;
-    min-width: 250px;
+    min-width: 175px;
     margin: auto;
     padding: 0px 20px;
 }
 
 .HomeComponent .hero {
     color: white;
-    background-image: radial-gradient(#707070, #3e3e3e);
+    background-image: radial-gradient(closest-side at 54% 39%, #70706F, #3e3e3e);
+    box-shadow: 0px 4px 7px 1px rgb(0 0 0 / 61%);
+}
+
+.HomeComponent .hero .banner-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: 0.5rem;
+}
+
+.HomeComponent .hero .banner-tag {
+    font-size: 0.85rem;
+    font-weight: 100;
+    letter-spacing: 0.45rem;
+    line-height: 0px;
 }

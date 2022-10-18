@@ -28,7 +28,7 @@ export default class LoginComponent extends React.Component {
                         <input name="password" type="password" className="form-control" id="passwordInput" aria-describedby="passwordHelp" placeholder="Enter password" />
                         <small id="passwordHelp" className="form-text text-muted">Please input your password</small>
                     </div>
-                    <button type="submit" className="btn btn-primary">Login</button>
+                    <button type="submit" className="btn btn-primary action">Login</button>
                 </form>
             </div>
         );
