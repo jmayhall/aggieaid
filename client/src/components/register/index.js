@@ -1,8 +1,14 @@
 import React from 'react';
 import './styles.css'
 import AuthService from '../../service/auth.service';
+import { withNavigation } from '../../helpers/hocs';
 
-export default class RegisterComponent extends React.Component {
+class RegisterComponent extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
 
     async handleSubmit(e) {
         e.preventDefault();
@@ -12,7 +18,7 @@ export default class RegisterComponent extends React.Component {
             elements.email.value, 
             elements.password.value
         ).then(() => {
-            e.target.reset();
+            this.props.navigate('/login');
         });        
     }
 
@@ -53,3 +59,5 @@ export default class RegisterComponent extends React.Component {
         );
     }
 }
+
+export default withNavigation(RegisterComponent);

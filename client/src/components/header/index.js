@@ -2,8 +2,9 @@ import React from 'react';
 import './styles.css'
 import { Link } from "react-router-dom";
 import { ReactComponent as AggieAidLogo } from '../shared/images/aggie-aid-logo.svg';
-import LogoutComponent from '../logout';
 import AuthService from '../../service/auth.service';
+import Events from '../../constants/events.constants';
+import UserContextComponent from '../user-context';
 
 export default class HeaderComponent extends React.Component {
 
@@ -17,13 +18,13 @@ export default class HeaderComponent extends React.Component {
 
     componentDidMount() {
         if (typeof window !== 'undefined') {
-            window.addEventListener('storage', this.localStorageUpdated)
+            window.addEventListener(Events.AUTH_CHANGE, this.localStorageUpdated)
         }
     }
 
     componentWillUnmount(){
         if (typeof window !== 'undefined') {
-            window.removeEventListener('storage', this.localStorageUpdated)
+            window.removeEventListener(Events.AUTH_CHANGE, this.localStorageUpdated)
         }
     }
 
@@ -36,8 +37,10 @@ export default class HeaderComponent extends React.Component {
 
     render() {
         const logInOutButton = this.state.isLoggedIn
-            ? <LogoutComponent></LogoutComponent>
-            : <Link className="btn btn-secondary btn-small navbar-btn" to={"/login"}>Login</Link>;
+            ? <UserContextComponent></UserContextComponent>
+            : AuthService.isKnownMachine()
+            ? <Link className="btn btn-secondary btn-small navbar-btn" to={"/login"}>Login</Link>
+            : <Link className="btn btn-secondary btn-small navbar-btn" to={"/register"}>Sign Up</Link>;
 
         return  (
             <nav className="HeaderComponent navbar navbar-expand-lg navbar-dark bg-dark">
@@ -68,7 +71,7 @@ export default class HeaderComponent extends React.Component {
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
-                            <li className="nav-item">
+                            <li className="nav-item d-none d-sm-block">
                                 <form className="d-flex">
                                     <i className="bi bi-search"></i>
                                     <input className="form-control me-2" type="search" placeholder="Find Events" aria-label="Search" />

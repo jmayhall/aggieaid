@@ -7,7 +7,7 @@ export default class HomeComponent extends React.Component {
     render() {
         return  (
             <div className="HomeComponent">
-                <div className="hero px-4 py-5 my-4 text-center">
+                <div className="hero px-4 py-5 my-1 text-center">
                     <h1 className="fw-bold fs-3">A Platform for Connecting Aggie Volunteers to Community Needs</h1>
                     <div className="col-lg-6 mx-auto">
                         <Link to={"/create-event"}>

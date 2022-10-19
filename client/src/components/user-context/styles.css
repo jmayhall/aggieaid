@@ -1,0 +1,10 @@
+.UserContextComponent .dropdown-toggle .bi-person-circle {
+    color: white;
+    transition: color 0.15s linear;
+}
+
+.UserContextComponent .dropdown-toggle:hover .bi-person-circle,
+.UserContextComponent .show .bi-person-circle {
+    color: black;
+    transition: color 0.15s linear;
+}

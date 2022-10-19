@@ -3,7 +3,12 @@
     border: thin solid #007777;
 }
 
+.btn.action:hover {
+    background-color: #018585;
+    border: thin solid #018585;
+}
+
 .btn.action:active {
-    background-color: #008b8b;
-    border: thin solid #008b8b;
+    background-color: #037070;
+    border: thin solid #037070;
 }
