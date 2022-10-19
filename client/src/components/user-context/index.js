@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles.css'
 import AuthService from '../../service/auth.service';
-import { withNavigation } from '../../helpers/wrapers';
+import { withNavigation } from '../../helpers/hocs';
 
 class UserContextComponent extends React.Component {
 

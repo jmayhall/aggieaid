@@ -12,11 +12,11 @@ export default class HomeComponent extends React.Component {
                     <h1 className="fw-bold fs-3">A Platform for Connecting Aggie Volunteers to Community Needs</h1>
                     <div className="col-lg-6 mx-auto">
                         <Link to={"/create-event"} className="text-decoration-none">
-                            <button type="button" className="btn btn-primary action d-flex m-auto d-sm-inline-flex">Create An Event</button>
+                            <button type="button" className="btn btn-primary btn-lg action d-flex m-auto d-sm-inline-flex">Create An Event</button>
                         </Link>
                         <AggieAidLogo className='logo d-none d-md-inline-block'></AggieAidLogo>
                         <Link to={"/find-event"} className="text-decoration-none">
-                            <button type="button" className="btn btn-primary action d-flex m-auto d-sm-inline-flex my-2">Find an Event</button>
+                            <button type="button" className="btn btn-primary btn-lg action d-flex m-auto d-sm-inline-flex my-2">Find an Event</button>
                         </Link>
                     </div>
                     <h2 className='banner-title'>AGGIE AID</h2>

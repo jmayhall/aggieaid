@@ -1,6 +1,18 @@
+.btn {
+    box-shadow: -1px 2px 3px -1px rgba(0 0 0 / 55%);
+    transition: box-shadow 0.25s ease-in-out;
+}
+
+.btn:active {
+    box-shadow: -1px 2px 3px -1px rgb(0 0 0 / 35%);
+    transition: box-shadow 0.25s ease-in-out;
+}
+
 .btn.action {
+    color: white;
     background-color: #007777;
     border: thin solid #007777;
+   
 }
 
 .btn.action:hover {
