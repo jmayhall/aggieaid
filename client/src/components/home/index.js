@@ -2,6 +2,7 @@ import React from 'react';
 import './styles.css';
 import { Link } from "react-router-dom";
 import { ReactComponent as AggieAidLogo } from '../shared/images/aggie-aid-logo.svg';
+import EventSlider from '../event-slider';
 
 export default class HomeComponent extends React.Component {
     render() {
@@ -13,7 +14,7 @@ export default class HomeComponent extends React.Component {
                         <Link to={"/create-event"} className="text-decoration-none">
                             <button type="button" className="btn btn-primary action d-flex m-auto d-sm-inline-flex">Create An Event</button>
                         </Link>
-                        <AggieAidLogo className='logo d-none d-sm-inline-block'></AggieAidLogo>
+                        <AggieAidLogo className='logo d-none d-md-inline-block'></AggieAidLogo>
                         <Link to={"/find-event"} className="text-decoration-none">
                             <button type="button" className="btn btn-primary action d-flex m-auto d-sm-inline-flex my-2">Find an Event</button>
                         </Link>
@@ -21,6 +22,9 @@ export default class HomeComponent extends React.Component {
                     <h2 className='banner-title'>AGGIE AID</h2>
                     <h3 className="banner-tag">HOW MANY AGGIES</h3>
                 </div>
+                
+                <EventSlider></EventSlider>
+
             </div>
         );
     }

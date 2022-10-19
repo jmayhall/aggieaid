@@ -71,7 +71,7 @@ export default class HeaderComponent extends React.Component {
                             </li>
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
-                            <li className="nav-item d-none d-sm-block">
+                            <li className="nav-item d-none d-lg-block">
                                 <form className="d-flex">
                                     <i className="bi bi-search"></i>
                                     <input className="form-control me-2" type="search" placeholder="Find Events" aria-label="Search" />
