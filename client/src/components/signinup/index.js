@@ -2,7 +2,7 @@ import React from 'react';
 import './styles.css'
 import RegisterComponent from '../register';
 import LoginComponent from '../login';
-import { withSearchParams } from '../../helpers/hocs';
+import { withSearchParams } from '../../helpers/wrapers';
 
 
  class SignInUpComponent extends React.Component {
