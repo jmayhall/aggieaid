@@ -24,7 +24,7 @@ export default class AboutUsComponent extends React.Component {
                 <div id="team" className='my-5 mb-5'>
                     <TeamMemberComponent 
                         fullName='Tim Chockerham'
-                        email=''
+                        email='tcockerham@tamu.edu'
                         portrait={timPort}
                         bio='Tim Cockerham is a proud triple-Aggie. He graduated from Texas A&M with a BBA in Management of Information Systems in 2000, has worked at Texas A&M for the last 18 years as a database administrator, and is midway through his master’s degree there as well. Before he was a DBA though, he made money as a waiter, a bartender, a radio DJ, a burger flipper, a butcher, a parking lot valet, a software developer, a teacher, a test driver, a lawn mower, and a paperboy. He’s always willing to do any job that helps out his family, friends, or colleagues.'>
                     </TeamMemberComponent>
