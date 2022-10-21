@@ -30,5 +30,5 @@ server:
 # App Properties
 app:
   jwtSecret: secretsecret
-  jwtExpirationMs: 86400000
+  jwtExpirationMs: 60000
   
