@@ -17,7 +17,7 @@ class LoginComponent extends React.Component {
 
         this.state = {
             isFormValid: false,
-            formError: '',
+            formError: undefined,
             fields: {
                 email: {
                     value: '',
@@ -52,11 +52,13 @@ class LoginComponent extends React.Component {
         AuthService.login(elements.email.value, elements.password.value)
             .then(res => {
                 if(res.ok) {
-                    this.props.navigate('/');
+                    this.setState({formError: undefined}, () => {
+                        this.props.navigate('/');
+                    });
                 } else {
-                    const formError = res.text();
-                    console.log(formError);
-                    this.setState({formError});
+                    res.text().then(e => {
+                        this.setState({formError: JSON.parse(e).message});
+                    });   
                 }
             });
     }
@@ -130,7 +132,10 @@ class LoginComponent extends React.Component {
             <div className="LoginComponent">
                 <h2>Login</h2>
                 <form onSubmit={this.handleSubmit} noValidate>
-                <div className={`form-group`}>
+                    <div className={`alert alert-danger ${!this.state.formError ? 'd-none' : ''}`} role="alert">
+                        {this.state.formError}
+                    </div>
+                    <div className={`form-group`}>
                         <label htmlFor="loginEmailInput">Email address</label>
                         <input  name="email" 
                                 type="email" 

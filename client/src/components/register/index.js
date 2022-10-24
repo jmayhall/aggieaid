@@ -111,7 +111,7 @@ class RegisterComponent extends React.Component {
                 });
                 
             } else {
-                const formError = res.text();
+                const formError = res;
                 console.log(formError);
                 this.setState({formError});
             }

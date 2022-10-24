@@ -12,11 +12,13 @@ export default class AuthService {
         });
 
         reqPromise.then(r => {
-            r.json().then(u => {
-                localStorage.setItem(StorageKeys.USER, JSON.stringify(u));
-                localStorage.setItem(StorageKeys.KNOWN_MACHINE, true);
-                window.dispatchEvent( new Event(Events.AUTH_CHANGE));
-            })
+            if(r.ok) {
+                r.json().then(u => {
+                    localStorage.setItem(StorageKeys.USER, JSON.stringify(u));
+                    localStorage.setItem(StorageKeys.KNOWN_MACHINE, true);
+                    window.dispatchEvent( new Event(Events.AUTH_CHANGE));
+                })
+            }
         });
 
         return reqPromise;

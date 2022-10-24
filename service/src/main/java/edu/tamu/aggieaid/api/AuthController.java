@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.tamu.aggieaid.api.dto.ErrorDTO;
 import edu.tamu.aggieaid.api.dto.JwtDTO;
 import edu.tamu.aggieaid.api.dto.LoginDTO;
 import edu.tamu.aggieaid.api.dto.NewUserDTO;
@@ -87,7 +88,12 @@ public class AuthController {
 
         return Objects.nonNull(authentication) && authentication.isAuthenticated() 
             ? res
-            : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed");
+            : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorDTO.builder()
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .error(HttpStatus.UNAUTHORIZED.name())
+                .message("Authentication Error")
+                .path("api/auth/login")
+                .build());
     }
 
 }

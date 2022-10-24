@@ -43,15 +43,17 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(authenticationProvider());
+        authenticationManagerBuilder
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(encoder())
+            .and()
+            .authenticationProvider(authenticationProvider());
         return authenticationManagerBuilder.build();
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(encoder());
+    public CustomAuthenticationProvider authenticationProvider() {
+        CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();     
         return authProvider;
     }
 
@@ -83,12 +85,12 @@ public class SecurityConfig {
 
                 .anyRequest()
                     .authenticated();
-      
-      http.authenticationProvider(authenticationProvider());
+
+        http.authenticationManager(authManager(http));
   
-      http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
       
-      return http.build();
+        return http.build();
     }
     
 }

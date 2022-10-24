@@ -41,7 +41,6 @@ export default class ApiService {
         return new Promise((resolve, reject) => {
             makeAPICall(path, 'POST', JSON.stringify(body))
                 .then(r => {
-                    console.log(r);
                     resolve(r);
                 })
                 .catch(e => {
