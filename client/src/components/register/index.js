@@ -2,6 +2,8 @@ import React from 'react';
 import './styles.css'
 import AuthService from '../../service/auth.service';
 import { withNavigation } from '../../helpers/hocs';
+import ValidationMessages from '../../constants/validationMessages.constants';
+import ValidationPaterns from '../../constants/validationPaterns.constants';
 
 class RegisterComponent extends React.Component {
 
@@ -9,8 +11,9 @@ class RegisterComponent extends React.Component {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUserInput = this.handleUserInput.bind(this);
-        this.handleUserInput = this.handleUserInput.bind(this);
+        this.handleUserInputBlur = this.handleUserInputBlur.bind(this);
         this.validateInput = this.validateInput.bind(this);
+        this.validationTimer = null;
 
         this.state = {
             isFormValid: false,
@@ -18,7 +21,7 @@ class RegisterComponent extends React.Component {
                 name: {
                     value: '',
                     displayName: 'Name',
-                    valid: false,                
+                    valid: undefined,                
                     validations: {
                         minLength: 3,
                         maxLength: 50,
@@ -30,7 +33,7 @@ class RegisterComponent extends React.Component {
                 email:  {
                     value: '',
                     displayName: 'Email',
-                    valid: false,                
+                    valid: undefined,                
                     validations: {
                         minLength: 0,
                         maxLength: 25,
@@ -43,7 +46,7 @@ class RegisterComponent extends React.Component {
                 password:  {
                     value: '',
                     displayName: 'Password',
-                    valid: false,                
+                    valid: undefined,                
                     validations: {
                         minLength: 8,
                         maxLength: 50,
@@ -55,8 +58,9 @@ class RegisterComponent extends React.Component {
                 confirmEmail:  {
                     value: '',
                     displayName: 'Email Confirmation',
-                    valid: false,                
+                    valid: undefined,                
                     validations: {
+                        reqired: true,
                         minLength: 0,
                         maxLength: 25,
                         match: 'email'
@@ -67,8 +71,9 @@ class RegisterComponent extends React.Component {
                 confirmPassword:  {
                     value: '',
                     displayName: 'Password Confirmation',
-                    valid: false,    
+                    valid: undefined,    
                     validations: {
+                        required: true,
                         minLength: 8,
                         maxLength: 50,
                         match: 'password'
@@ -89,9 +94,28 @@ class RegisterComponent extends React.Component {
             elements.email.name, 
             elements.email.value, 
             elements.password.value
-        ).then(() => {
-            this.props.navigate('/login');
-        });        
+        ).then(res => {
+            console.log(res);
+            if(res.ok) {
+                const fields = {...this.state.fields};
+                Object.keys(fields).forEach(k => {
+                    fields[k].value = '';
+                    fields[k].valid = undefined;
+                    fields[k].wasValidated = false;
+                });
+                this.setState({
+                    isFormValid: false,
+                    fields: fields
+                }, () => {
+                    this.props.navigate('/login');
+                });
+                
+            } else {
+                const formError = res.text();
+                console.log(formError);
+                this.setState({formError});
+            }
+        });       
     }
 
     handleUserInput (e) {
@@ -100,8 +124,21 @@ class RegisterComponent extends React.Component {
         const fields = {...this.state.fields}
         const newState = {...fields[name]};
         newState.value = value;
+        newState.errors = [];
+        newState.valid = undefined;
+        newState.wasValidated = false;
         fields[name] = newState;
-        this.setState({fields});
+        this.setState({fields}, ()=> {
+
+            if(!!this.validationTimer) {
+                clearTimeout(this.validationTimer);
+            }
+
+            this.validationTimer = setTimeout(() => {
+                this.validateInput(e.target);
+            }, 500);
+            
+        });
     }
 
     handleUserInputBlur (e) {
@@ -116,50 +153,44 @@ class RegisterComponent extends React.Component {
         newState.wasValidated = true;
         newState.errors = [];
 
-        console.log(target);
-
-        if(!value.trim().length && target.hasAttribute('required')) {
-            newState.errors.push(`${newState.displayName} cannot be empty`)
+        if(!value.trim().length && newState.validations.required) {
+            newState.errors.push(ValidationMessages.REQUIRED)
         }
 
         if(value.length && value.length < newState.validations.minLength) {
-            newState.errors.push(`${newState.displayName} must be over ${newState.validations.minLength} in length`)
+            newState.errors.push(ValidationMessages.MIN_LENGTH.format(newState.validations.minLength))
         }
 
         if(value.length > newState.validations.maxLength) {
-            newState.errors.push(`${newState.displayName} must be under ${newState.validations.maxLength} in length`)
+            newState.errors.push(ValidationMessages.MAX_LENGTH.format(newState.validations.maxLength))
         }
 
         if(target.type === "email" && value.length) {
-            const ere = /\S+@\S+\.\S+/;
+            const ere = ValidationPaterns.VALID_EMAIL;
             if(!ere.test(value)) {
-                newState.errors.push(`${newState.displayName} must be a valid email`)
+                newState.errors.push(ValidationMessages.VALID_EMAIL)
             }
             
         }
 
-        if(target.type === "password") {
-            const pre = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+        if(target.type === "password" && !!value.trim().length) {
+            const pre = ValidationPaterns.VALID_PASSWORD;
             if(!pre.test(value)) {
-                newState.errors.push(`Must have at least one uppercase letter, one lowercase letter, one number and one special character`)
+                newState.errors.push(ValidationMessages.VALID_PASSWORD)
             }
         }
 
         if(!!newState.validations.match) {
             const matchState = this.state.fields[newState.validations.match];
-            console.log(matchState);
             if(matchState.value !== newState.value) {
-                newState.errors.push(`${newState.displayName} must equal ${matchState.displayName}`)
+                newState.errors.push(ValidationMessages.MATCH_VIOLATION.format(newState.displayName, matchState.displayName))
             }
         }
+
         fields[name] = newState;
         newState.valid = !newState.errors.length;
-        this.setState({fields});
-        const isFormValid = !!Object.keys(this.state.fields).filter(k => this.state.fields[k].valid).length;
-        this.setState({isFormValid: isFormValid});
-
-
-        
+        const isFormValid = !Object.keys(fields).filter(k => !fields[k].wasValidated || !fields[k].valid).length;
+        this.setState({fields, isFormValid});
 
     }
 
@@ -184,7 +215,7 @@ class RegisterComponent extends React.Component {
                         <small id="registerNameHelp" className={`form-text text-muted ${this.state.fields.name.valid || !this.state.fields.name.wasValidated ? '' : 'd-none'}`}>Please input your full name</small>
                         <div id="nameFeedBack" className="invalid-feedback">
                             {
-                                this.state.fields.name.errors.map(m => <li>{m}</li>)
+                                this.state.fields.name.errors.map(m => <li key={m}>{m}</li>)
                             }
                         </div>
                     </div>
@@ -204,7 +235,7 @@ class RegisterComponent extends React.Component {
                         <small id="registerEmailHelp" className={`form-text text-muted ${this.state.fields.email.valid || !this.state.fields.email.wasValidated ? '' : 'd-none'}`}>Please input your email address</small>
                         <div id="emailFeedBack" className="invalid-feedback">
                             {
-                                this.state.fields.email.errors.map(m => <li>{m}</li>)
+                                this.state.fields.email.errors.map(m => <li key={m}>{m}</li>)
                             }
                         </div>
                     </div>
@@ -224,7 +255,7 @@ class RegisterComponent extends React.Component {
                         <small id="confirmRegisterEmailHelp" className={`form-text text-muted ${this.state.fields.confirmEmail.valid || !this.state.fields.confirmEmail.wasValidated ? '' : 'd-none'}`}>Please confirm your email address</small>
                         <div id="confirmEmailFeedBack" className="invalid-feedback">
                             {
-                                this.state.fields.confirmEmail.errors.map(m => <li>{m}</li>)
+                                this.state.fields.confirmEmail.errors.map(m => <li key={m}>{m}</li>)
                             }
                         </div>
                     </div>
@@ -244,7 +275,7 @@ class RegisterComponent extends React.Component {
                         <small id="passwordHelp" className={`form-text text-muted ${this.state.fields.password.valid || !this.state.fields.password.wasValidated ? '' : 'd-none'}`}>Please input your password</small>
                         <div id="passwordFeedBack" className="invalid-feedback">
                             {
-                                this.state.fields.password.errors.map(m => <li>{m}</li>)
+                                this.state.fields.password.errors.map(m => <li key={m}>{m}</li>)
                             }
                         </div>
                     </div>
@@ -264,7 +295,7 @@ class RegisterComponent extends React.Component {
                         <small id="confirmPasswordHelp" className={`form-text text-muted ${this.state.fields.confirmPassword.valid || !this.state.fields.confirmPassword.wasValidated ? '' : 'd-none'}`}>Please confirm your password</small>
                         <div id="confirmPasswordFeedBack" className="invalid-feedback">
                             {
-                                this.state.fields.confirmPassword.errors.map(m => <li>{m}</li>)
+                                this.state.fields.confirmPassword.errors.map(m => <li key={m}>{m}</li>)
                             }
                         </div>
                     </div>

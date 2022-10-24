@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 public class LoginDTO {
 
-    @NotBlank
+    @NotBlank(message = "Email is a required field")
     String email;
 
-    @NotBlank
+    @NotBlank(message = "Password is a required field")
     String password;
 
 }

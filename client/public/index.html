@@ -24,6 +24,19 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <script>
+      String.prototype.format = function () {
+        // store arguments in an array
+        var args = arguments;
+        // use replace to iterate over the string
+        // select the match and check if the related argument is present
+        // if yes, replace the match with the argument
+        return this.replace(/{([0-9]+)}/g, function (match, index) {
+          // check if the argument is present
+          return typeof args[index] == 'undefined' ? match : args[index];
+        });
+      };
+    </script>
     <title>Aggie Aid</title>
   </head>
   <body>

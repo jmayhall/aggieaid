@@ -1,6 +1,7 @@
 package edu.tamu.aggieaid.api;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
@@ -56,31 +57,37 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtDTO> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) {
-
-        System.out.println(loginDTO);
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) {
 
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-        
-        User userDetails = (User) authentication.getPrincipal();    
 
-        System.out.println(userDetails);
+        ResponseEntity<?> res = null;
 
-        // List<String> roles = userDetails.getAuthorities().stream()
-        //     .map(item -> item.getAuthority())
-        //     .collect(Collectors.toList());
+        if(Objects.nonNull(authentication)) {
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
+            
+            User userDetails = (User) authentication.getPrincipal();    
+    
+            // List<String> roles = userDetails.getAuthorities().stream()
+            //     .map(item -> item.getAuthority())
+            //     .collect(Collectors.toList());
 
-        return ResponseEntity.ok(JwtDTO.builder()
-                                    .token(jwt)
-                                    .id(userDetails.getId())
-                                    .username(userDetails.getUsername())
-                                    .email(userDetails.getEmail())
-                                    .roles(new ArrayList<>())
-                                    .build());
+            res = ResponseEntity.ok(JwtDTO.builder()
+            .token(jwt)
+            .id(userDetails.getId())
+            .username(userDetails.getUsername())
+            .email(userDetails.getEmail())
+            .roles(new ArrayList<>())
+            .build());
+
+        }
+
+        return Objects.nonNull(authentication) && authentication.isAuthenticated() 
+            ? res
+            : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed");
     }
 
 }

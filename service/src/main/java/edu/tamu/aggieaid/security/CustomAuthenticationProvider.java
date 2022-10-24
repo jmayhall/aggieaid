@@ -39,17 +39,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                 new UsernameNotFoundException("User not found with email:" + name));
 
         if (encoder.matches(password, user.getPassword())) {
-			final List<GrantedAuthority> grantedAuths = new ArrayList<>();
-			grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
-			final UserDetails principal = User.builder()
-                .name(name)
-                .password(password)
-                .build();
-			final Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
-			return auth;
-		} else {
-			return null;
-		}
+          final List<GrantedAuthority> grantedAuths = new ArrayList<>();
+          grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
+          final UserDetails principal = user;
+          final Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
+        return auth;
+      } else {
+        return null;
+      }
 
     }
 
