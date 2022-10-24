@@ -59,12 +59,12 @@
     box-shadow: -0.5px 1px 2px -1px rgb(0 0 0 / 55%);
 }
 
-.CreateEventComponent .valunteers-form-group {
-    max-width: 125px;
+.CreateEventComponent .volunteers-form-group {
+    max-width: 225px;
     text-align: center;
 }
 
-.CreateEventComponent .valunteers-form-group input {
+.CreateEventComponent .volunteers-form-group input {
     text-align: center;
 }
 

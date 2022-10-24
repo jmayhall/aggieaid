@@ -68,7 +68,7 @@ class CreateEventComponent extends React.Component {
                     errors: [],
                     wasValidated: false
                 },
-                valunteers: {
+                volunteers: {
                     value: 5,
                     displayName: 'volunteers',
                     valid: undefined,
@@ -128,6 +128,16 @@ class CreateEventComponent extends React.Component {
 
     handleUserInputBlur(e) {
         this.validateInput(e.target);
+    }
+
+    handleVolunteerChange(change) {
+        const fields = {...this.state.fields}
+        fields.volunteers.value += change;
+        console.log(fields.volunteers.value >= fields.volunteers.validations.min && fields.volunteers.value <= fields.volunteers.validations.max)
+        if(fields.volunteers.value >= fields.volunteers.validations.min && fields.volunteers.value <= fields.volunteers.validations.max) {
+            this.setState({fields})
+        }
+            
     }
 
     validateInput(target) {
@@ -265,26 +275,29 @@ class CreateEventComponent extends React.Component {
                                     </div>
                                 </div>
 
-                                <div className={`form-group m-auto valunteers-form-group my-5`}>
-                                    <label htmlFor="valunteersInput">Volunteers</label>
+                                <div className={`form-group m-auto volunteers-form-group my-5`}>
+                                    <label htmlFor="volunteersInput">How many</label>
                                     <div className="input-group mb-3">
-                                        <button className="btn btn-outline-secondary" type="button" id="button-addon1">-</button>
-                                        <input  name="valunteers" 
+                                    <button className="btn btn-outline-secondary" type="button" id="button-addon1" onClick={() => this.handleVolunteerChange(-10)}>-10</button>
+                                        <button className="btn btn-outline-secondary" type="button" id="button-addon1" onClick={() => this.handleVolunteerChange(-1)}>-</button>
+                                        <input  name="volunteers" 
                                                 type="text" 
-                                                className={`form-control ${this.state.fields.valunteers.wasValidated ? this.state.fields.valunteers.valid ? 'is-valid' : 'is-invalid' : ''}`}
-                                                id="valunteersInput" 
-                                                aria-describedby="valunteersHelp valunteersFeedBack" 
-                                                value={this.state.fields.valunteers.value} 
+                                                className={`form-control ${this.state.fields.volunteers.wasValidated ? this.state.fields.volunteers.valid ? 'is-valid' : 'is-invalid' : ''}`}
+                                                id="volunteersInput" 
+                                                aria-describedby="volunteersHelp volunteersFeedBack" 
+                                                value={this.state.fields.volunteers.value} 
                                                 onChange={(event) => this.handleUserInput(event)}
                                                 onBlur={(event) => this.handleUserInputBlur(event)}
                                                 required
+                                                disabled
                                         />
-                                        <button className="btn btn-outline-secondary" type="button" id="button-addon2">+</button>
+                                        <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={() => this.handleVolunteerChange(1)}>+</button>
+                                        <button className="btn btn-outline-secondary" type="button" id="button-addon2" onClick={() => this.handleVolunteerChange(10)}>+10</button>
                                     </div>         
-                                    <small id="valunteersHelp" className={`form-text text-muted ${this.state.fields.valunteers.valid || !this.state.fields.valunteers.wasValidated ? '' : 'd-none'}`}>Volunteers needed</small>
-                                    <div id="valunteersFeedBack" className="invalid-feedback">
+                                    <small id="volunteersHelp" className={`form-text text-muted ${this.state.fields.volunteers.valid || !this.state.fields.volunteers.wasValidated ? '' : 'd-none'}`}>Aggies</small>
+                                    <div id="volunteersFeedBack" className="invalid-feedback">
                                         {
-                                            this.state.fields.valunteers.errors.map(m => <li key={m}>{m}</li>)
+                                            this.state.fields.volunteers.errors.map(m => <li key={m}>{m}</li>)
                                         }
                                     </div>
                                 </div>
