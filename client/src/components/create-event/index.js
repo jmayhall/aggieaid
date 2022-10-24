@@ -37,11 +37,46 @@ class CreateEventComponent extends React.Component {
                 },
                 date: {
                     value: Date.now(),
-                    displayName: 'Date',
+                    displayName: 'Event Date',
                     valid: undefined,
                     validations: {
                         required: true,
                         date: true
+                    }, 
+                    errors: [],
+                    wasValidated: false
+                },
+                startTime: {
+                    value: '',
+                    displayName: 'Event Start Time',
+                    valid: undefined,
+                    validations: {
+                        required: true,
+                        time: true
+                    }, 
+                    errors: [],
+                    wasValidated: false
+                },
+                endTime: {
+                    value: '',
+                    displayName: 'Event End Time',
+                    valid: undefined,
+                    validations: {
+                        required: true,
+                        time: true
+                    }, 
+                    errors: [],
+                    wasValidated: false
+                },
+                valunteers: {
+                    value: 5,
+                    displayName: 'volunteers',
+                    valid: undefined,
+                    validations: {
+                        max: 200,
+                        min: 5,
+                        required: true,
+                        number: true
                     }, 
                     errors: [],
                     wasValidated: false
@@ -155,16 +190,105 @@ class CreateEventComponent extends React.Component {
                                     </div>
                                 </div>
 
-                                <DatePicker
-                                    selected={this.state.fields.date.value}
-                                    onChange={(date) => {
-                                            const fields = {...this.state.fields};
-                                            fields.date.value = date;
-                                            this.setState({fields})
+                                <div className='row my-4'>
+                                    <div className='col-6'>
+                                        <div className={`form-group`}>
+                                            <label htmlFor="dateInput">Event Date</label>
+                                            <DatePicker
+                                                id='dateInput' 
+                                                selected={this.state.fields.date.value}
+                                                onChange={(date) => {
+                                                        const fields = {...this.state.fields};
+                                                        fields.date.value = date;
+                                                        this.setState({fields})
+                                                    }
+                                                }
+                                                inline
+                                            />
+                                        </div>        
+                                    </div>
+                                    <div className='col-6'>
+                                         <div className={`form-group`}>
+                                            <label htmlFor="formFileLg" className="form-label">Event Thumnail</label>
+                                            <div className='file-input-field'>
+                                                <div className='preview'></div>
+                                                <input id="formFileLg form-control" type="file" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className='row'>
+                                    <div className='col-6'>
+                                        <div className={`form-group`}>
+                                            <label htmlFor="startTimeInput">Start Time</label>
+                                            <input  name="startTime" 
+                                                    type="text" 
+                                                    className={`form-control ${this.state.fields.startTime.wasValidated ? this.state.fields.startTime.valid ? 'is-valid' : 'is-invalid' : ''}`}
+                                                    id="startTimeInput" 
+                                                    aria-describedby="startTimeHelp startTimeFeedBack" 
+                                                    placeholder="Enter Start Time" 
+                                                    value={this.state.fields.startTime.value} 
+                                                    onChange={(event) => this.handleUserInput(event)}
+                                                    onBlur={(event) => this.handleUserInputBlur(event)}
+                                                    required
+                                            />
+                                            <small id="startTimeHelp" className={`form-text text-muted ${this.state.fields.startTime.valid || !this.state.fields.startTime.wasValidated ? '' : 'd-none'}`}>Please input the Event's Start Time</small>
+                                            <div id="startTimeFeedBack" className="invalid-feedback">
+                                                {
+                                                    this.state.fields.startTime.errors.map(m => <li key={m}>{m}</li>)
+                                                }
+                                            </div>
+                                        </div>      
+                                    </div>
+                                    <div className='col-6'>
+                                        <div className={`form-group`}>
+                                            <label htmlFor="endTimeInput">End Time</label>
+                                            <input  name="endTime" 
+                                                    type="text" 
+                                                    className={`form-control ${this.state.fields.endTime.wasValidated ? this.state.fields.endTime.valid ? 'is-valid' : 'is-invalid' : ''}`}
+                                                    id="endTimeInput" 
+                                                    aria-describedby="endTimeHelp endTimeFeedBack" 
+                                                    placeholder="Enter Event End Time" 
+                                                    value={this.state.fields.endTime.value} 
+                                                    onChange={(event) => this.handleUserInput(event)}
+                                                    onBlur={(event) => this.handleUserInputBlur(event)}
+                                                    required
+                                            />
+                                            <small id="endTimeHelp" className={`form-text text-muted ${this.state.fields.endTime.valid || !this.state.fields.endTime.wasValidated ? '' : 'd-none'}`}>Please input the Event's End Time</small>
+                                            <div id="endTimeFeedBack" className="invalid-feedback">
+                                                {
+                                                    this.state.fields.endTime.errors.map(m => <li key={m}>{m}</li>)
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className={`form-group m-auto valunteers-form-group my-5`}>
+                                    <label htmlFor="valunteersInput">Volunteers</label>
+                                    <div className="input-group mb-3">
+                                        <button className="btn btn-outline-secondary" type="button" id="button-addon1">-</button>
+                                        <input  name="valunteers" 
+                                                type="text" 
+                                                className={`form-control ${this.state.fields.valunteers.wasValidated ? this.state.fields.valunteers.valid ? 'is-valid' : 'is-invalid' : ''}`}
+                                                id="valunteersInput" 
+                                                aria-describedby="valunteersHelp valunteersFeedBack" 
+                                                value={this.state.fields.valunteers.value} 
+                                                onChange={(event) => this.handleUserInput(event)}
+                                                onBlur={(event) => this.handleUserInputBlur(event)}
+                                                required
+                                        />
+                                        <button className="btn btn-outline-secondary" type="button" id="button-addon2">+</button>
+                                    </div>         
+                                    <small id="valunteersHelp" className={`form-text text-muted ${this.state.fields.valunteers.valid || !this.state.fields.valunteers.wasValidated ? '' : 'd-none'}`}>Volunteers needed</small>
+                                    <div id="valunteersFeedBack" className="invalid-feedback">
+                                        {
+                                            this.state.fields.valunteers.errors.map(m => <li key={m}>{m}</li>)
                                         }
-                                    }
-                                    inline
-                                />
+                                    </div>
+                                </div>
+                                <button type="submit" className="btn btn-primary action" disabled={!this.state.isFormValid}>Create Event</button>
                             </form>
                         </div>
                     </div>

@@ -1,7 +1,74 @@
-.CreateEventComponent .row {
+/* .CreateEventComponent .row {
     height: 500px;
-}
+} */
 
 .CreateEventComponent .pane {
     box-shadow: -2px 3px 6px -2px rgba(0,0,0,0.25);
 }
+
+.CreateEventComponent .file-input-field {
+    background-color: #F6F6F6;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+}
+
+.CreateEventComponent .file-input-field input {
+    display: flex;
+    color:transparent;
+    height: 35px;
+ }
+
+ .CreateEventComponent .file-input-field .preview {
+    display: flex;
+    margin: auto;
+    width: 90%;
+    background-color: white;
+    margin-bottom: 14px;
+    height: 190px;
+  }
+
+ .CreateEventComponent .file-input-field input::file-selector-button {
+    display: flex;
+    align-self: center;
+    justify-self: end;
+    margin: auto;
+    width: 90%;
+    justify-self: center;
+    justify-content: center;
+    color: white;
+    background-color: #6c757d;
+    border: thin solid #6c757d;
+    box-shadow: -1px 2px 3px -1px rgb(0 0 0 / 55%);
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    border-radius: 3px;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.CreateEventComponent .file-input-field input::file-selector-button:hover {
+    background-color: #7f868e;
+    border: thin solid #7f868e;
+}
+
+.CreateEventComponent .file-input-field input::file-selector-button:active {
+    background-color: #50565d;
+    border: thin solid #50565d;
+    box-shadow: -0.5px 1px 2px -1px rgb(0 0 0 / 55%);
+}
+
+.CreateEventComponent .valunteers-form-group {
+    max-width: 125px;
+    text-align: center;
+}
+
+.CreateEventComponent .valunteers-form-group input {
+    text-align: center;
+}
+
+.CreateEventComponent .btn.action {
+    width: 100%;
+}
+
