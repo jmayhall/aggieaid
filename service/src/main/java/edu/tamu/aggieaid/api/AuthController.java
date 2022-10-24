@@ -3,6 +3,7 @@ package edu.tamu.aggieaid.api;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import javax.security.auth.message.AuthException;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -58,42 +59,31 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) throws AuthException {
 
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
+        
+        if(Objects.isNull(authentication) || !authentication.isAuthenticated()) {
+            throw new AuthException("Authentication Error");
+        }
 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        
+        User userDetails = (User) authentication.getPrincipal();    
 
-        ResponseEntity<?> res = null;
+        // List<String> roles = userDetails.getAuthorities().stream()
+        //     .map(item -> item.getAuthority())
+        //     .collect(Collectors.toList());
 
-        if(Objects.nonNull(authentication)) {
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateJwtToken(authentication);
-            
-            User userDetails = (User) authentication.getPrincipal();    
-    
-            // List<String> roles = userDetails.getAuthorities().stream()
-            //     .map(item -> item.getAuthority())
-            //     .collect(Collectors.toList());
-
-            res = ResponseEntity.ok(JwtDTO.builder()
+        return ResponseEntity.ok(JwtDTO.builder()
             .token(jwt)
             .id(userDetails.getId())
             .username(userDetails.getUsername())
             .email(userDetails.getEmail())
             .roles(new ArrayList<>())
             .build());
-
-        }
-
-        return Objects.nonNull(authentication) && authentication.isAuthenticated() 
-            ? res
-            : ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorDTO.builder()
-                .status(HttpStatus.UNAUTHORIZED.value())
-                .error(HttpStatus.UNAUTHORIZED.name())
-                .message("Authentication Error")
-                .path("api/auth/login")
-                .build());
     }
 
 }
