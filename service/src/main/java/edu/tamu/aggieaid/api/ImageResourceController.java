@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
 
 import edu.tamu.aggieaid.api.dto.ErrorDTO;
 import edu.tamu.aggieaid.api.dto.ResourceDataDTO;
@@ -34,9 +36,10 @@ public class ImageResourceController {
             storageService.save(file);
             return ResponseEntity.status(HttpStatus.OK).body(ResourceDataDTO.builder()
                 .name(file.getOriginalFilename())    
-                .url(file.getResource().getURL().toString())
+                .url("http://localhost:8080" + "/api/resources//public/" + file.getOriginalFilename())
                 .build());
         } catch (Exception e) {
+            e.printStackTrace();
             message = "Could not upload the file: " + file.getOriginalFilename() + "!";
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ErrorDTO.builder()
                 .error(HttpStatus.EXPECTATION_FAILED.name())
