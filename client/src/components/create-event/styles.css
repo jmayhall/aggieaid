@@ -29,6 +29,22 @@
     height: 190px;
   }
 
+  .CreateEventComponent .file-input-field .preview img {
+    max-height: 195px;
+    max-width: 195px;
+    width: auto;
+    margin: auto;
+    overflow: hidden;
+  }
+
+  .CreateEventComponent .file-input-field .preview i {
+    margin-top: 50px;
+    width: 100%;
+    font-size: 4rem;
+    font-weight: bolder;
+    text-align: center;
+  }
+
  .CreateEventComponent .file-input-field input::file-selector-button {
     display: flex;
     align-self: center;

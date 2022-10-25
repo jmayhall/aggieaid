@@ -16,12 +16,15 @@ class CreateEventComponent extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleUserInput = this.handleUserInput.bind(this);
         this.handleUserInputBlur = this.handleUserInputBlur.bind(this);
+        this.handleFileSelection = this.handleFileSelection.bind(this);
+        this.handleVolunteerChange = this.handleVolunteerChange.bind(this);
         this.validateInput = this.validateInput.bind(this);
         this.validationTimer = null;
 
         this.state = {
             isFormValid: false,
             formError: undefined,
+            previewUrl: undefined,
             fields: {
                 title: {
                     value: '',
@@ -43,6 +46,17 @@ class CreateEventComponent extends React.Component {
                         required: true,
                         date: true
                     }, 
+                    errors: [],
+                    wasValidated: false
+                },
+                thumbnail: {
+                    value: undefined,
+                    displayName: 'Event Thumbnail',
+                    valid: undefined,
+                    validations: {
+                        required: false,
+                        image: true,
+                    },
                     errors: [],
                     wasValidated: false
                 },
@@ -70,7 +84,7 @@ class CreateEventComponent extends React.Component {
                 },
                 volunteers: {
                     value: 5,
-                    displayName: 'volunteers',
+                    displayName: 'Aggies',
                     valid: undefined,
                     validations: {
                         max: 200,
@@ -130,14 +144,27 @@ class CreateEventComponent extends React.Component {
         this.validateInput(e.target);
     }
 
+    handleFileSelection(e) {
+        const files = e.target.files;
+        const fields = {...this.state.fields}
+        fields.thumbnail.value = files;
+        if(!!this.state.previewUrl) {
+            URL.revokeObjectURL(this.state.previewUrl)
+        }
+        const previewUrl = URL.createObjectURL(files[0]);
+        this.setState({fields, previewUrl});
+    }
+
     handleVolunteerChange(change) {
         const fields = {...this.state.fields}
-        fields.volunteers.value += change;
-        console.log(fields.volunteers.value >= fields.volunteers.validations.min && fields.volunteers.value <= fields.volunteers.validations.max)
-        if(fields.volunteers.value >= fields.volunteers.validations.min && fields.volunteers.value <= fields.volunteers.validations.max) {
-            this.setState({fields})
-        }
-            
+        let volCount = fields.volunteers.value + change;
+        volCount = volCount < fields.volunteers.validations.min
+        ? fields.volunteers.validations.min
+        : volCount > fields.volunteers.validations.max
+        ?  volCount = fields.volunteers.validations.max
+        : volCount;
+        fields.volunteers.value = volCount;
+        this.setState({fields});
     }
 
     validateInput(target) {
@@ -178,7 +205,6 @@ class CreateEventComponent extends React.Component {
                                 <div className={`alert alert-danger ${!this.state.formError ? 'd-none' : ''}`} role="alert">
                                     {this.state.formError}
                                 </div>
-
                                 <div className={`form-group`}>
                                     <label htmlFor="titleInput">Title</label>
                                     <input  name="title" 
@@ -199,13 +225,13 @@ class CreateEventComponent extends React.Component {
                                         }
                                     </div>
                                 </div>
-
                                 <div className='row my-4'>
                                     <div className='col-6'>
                                         <div className={`form-group`}>
                                             <label htmlFor="dateInput">Event Date</label>
                                             <DatePicker
-                                                id='dateInput' 
+                                                id='dateInput'
+                                                minDate={Date.now()}
                                                 selected={this.state.fields.date.value}
                                                 onChange={(date) => {
                                                         const fields = {...this.state.fields};
@@ -221,8 +247,11 @@ class CreateEventComponent extends React.Component {
                                          <div className={`form-group`}>
                                             <label htmlFor="formFileLg" className="form-label">Event Thumnail</label>
                                             <div className='file-input-field'>
-                                                <div className='preview'></div>
-                                                <input id="formFileLg form-control" type="file" />
+                                                <div className='preview'>
+                                                    <img className={!this.state.previewUrl ? 'd-none' : ''} src={this.state.previewUrl} alt="Event Thumnail" />
+                                                    <i className={`bi bi-upload ${!!this.state.previewUrl ? 'd-none' : ''}`}></i>
+                                                </div>
+                                                <input id="formFileLg form-control" type="file" onChange={this.handleFileSelection} />
                                             </div>
                                         </div>
                                     </div>
@@ -233,7 +262,8 @@ class CreateEventComponent extends React.Component {
                                         <div className={`form-group`}>
                                             <label htmlFor="startTimeInput">Start Time</label>
                                             <input  name="startTime" 
-                                                    type="text" 
+                                                    type="time"
+                                                    step="3600"
                                                     className={`form-control ${this.state.fields.startTime.wasValidated ? this.state.fields.startTime.valid ? 'is-valid' : 'is-invalid' : ''}`}
                                                     id="startTimeInput" 
                                                     aria-describedby="startTimeHelp startTimeFeedBack" 
@@ -255,7 +285,8 @@ class CreateEventComponent extends React.Component {
                                         <div className={`form-group`}>
                                             <label htmlFor="endTimeInput">End Time</label>
                                             <input  name="endTime" 
-                                                    type="text" 
+                                                    type="time"
+                                                    step="3600000"
                                                     className={`form-control ${this.state.fields.endTime.wasValidated ? this.state.fields.endTime.valid ? 'is-valid' : 'is-invalid' : ''}`}
                                                     id="endTimeInput" 
                                                     aria-describedby="endTimeHelp endTimeFeedBack" 
