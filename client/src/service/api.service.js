@@ -10,7 +10,7 @@ const makeAPICall = (path, method, body, extraHeaders) => {
 
     if(!!body) {
         reqOptions.body = body
-        deafultHeaders['Content-Type'] = 'application/json';
+        // deafultHeaders['Content-Type'] = 'application/json';
     }
 
     if(!!user.token) {
@@ -37,9 +37,21 @@ export default class ApiService {
         });
     }
 
-    static post(path, body) {
+    static postForm(path, body, headers) {
         return new Promise((resolve, reject) => {
-            makeAPICall(path, 'POST', JSON.stringify(body))
+            makeAPICall(path, 'POST', body, headers)
+                .then(r => {
+                    resolve(r);
+                })
+                .catch(e => {
+                    reject(e);
+                })
+        });
+    }
+
+    static post(path, body, headers) {
+        return new Promise((resolve, reject) => {
+            makeAPICall(path, 'POST', JSON.stringify(body), {...headers, 'Content-Type': 'application/json'})
                 .then(r => {
                     resolve(r);
                 })

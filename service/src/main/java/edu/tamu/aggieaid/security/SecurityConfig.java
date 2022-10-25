@@ -82,6 +82,9 @@ public class SecurityConfig {
                 .antMatchers(GET, "/h2", "/h2/**")
                     .permitAll()
 
+                .antMatchers(GET, "/api/resources/public/**")
+                    .permitAll()
+
                 .anyRequest()
                     .authenticated();
 

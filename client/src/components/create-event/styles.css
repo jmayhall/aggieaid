@@ -10,7 +10,6 @@
     background-color: #F6F6F6;
     display: flex;
     flex-direction: column;
-    width: 100%;
     padding: 10px;
 }
 
@@ -27,6 +26,7 @@
     background-color: white;
     margin-bottom: 14px;
     height: 190px;
+    overflow: hidden;
   }
 
   .CreateEventComponent .file-input-field .preview img {
@@ -85,6 +85,12 @@
 }
 
 .CreateEventComponent .btn.action {
+    width: 100%;
+}
+
+.CreateEventComponent .react-datepicker-wrapper, 
+.CreateEventComponent .react-datepicker, 
+.CreateEventComponent .react-datepicker__month-container {
     width: 100%;
 }
 

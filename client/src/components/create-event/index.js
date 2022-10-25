@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles.css'
-//import AuthService from '../../service/auth.service';
+import ResourceService from '../../service/resource.service';
 import { withNavigation } from '../../helpers/hocs';
 import ValidationMessages from '../../constants/validationMessages.constants';
 import DatePicker from 'react-datepicker'
@@ -41,13 +41,13 @@ class CreateEventComponent extends React.Component {
                 date: {
                     value: Date.now(),
                     displayName: 'Event Date',
-                    valid: undefined,
+                    valid: true,
                     validations: {
                         required: true,
                         date: true
                     }, 
                     errors: [],
-                    wasValidated: false
+                    wasValidated: true
                 },
                 thumbnail: {
                     value: undefined,
@@ -85,7 +85,7 @@ class CreateEventComponent extends React.Component {
                 volunteers: {
                     value: 5,
                     displayName: 'Aggies',
-                    valid: undefined,
+                    valid: true,
                     validations: {
                         max: 200,
                         min: 5,
@@ -93,7 +93,7 @@ class CreateEventComponent extends React.Component {
                         number: true
                     }, 
                     errors: [],
-                    wasValidated: false
+                    wasValidated: true
                 }
             }
         }
@@ -102,19 +102,12 @@ class CreateEventComponent extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        // const elements = e.target.elements;
-        // AuthService.login(elements.title.value, elements.password.value)
-        //     .then(res => {
-        //         if(res.ok) {
-        //             this.setState({formError: undefined}, () => {
-        //                 this.props.navigate('/');
-        //             });
-        //         } else {
-        //             res.text().then(e => {
-        //                 this.setState({formError: JSON.parse(e).message});
-        //             });   
-        //         }
-        //     });
+
+        ResourceService.upload(this.state.fields.thumbnail.value)
+            .then(r => {
+                console.log(r);
+            });
+
     }
 
     handleUserInput(e) {
@@ -148,6 +141,8 @@ class CreateEventComponent extends React.Component {
         const files = e.target.files;
         const fields = {...this.state.fields}
         fields.thumbnail.value = files;
+        fields.thumbnail.valid = true;
+        fields.thumbnail.wasValidated = true;
         if(!!this.state.previewUrl) {
             URL.revokeObjectURL(this.state.previewUrl)
         }
@@ -164,6 +159,8 @@ class CreateEventComponent extends React.Component {
         ?  volCount = fields.volunteers.validations.max
         : volCount;
         fields.volunteers.value = volCount;
+        fields.volunteers.valid = true;
+        fields.volunteers.wasValidated = true;
         this.setState({fields});
     }
 
@@ -198,7 +195,7 @@ class CreateEventComponent extends React.Component {
         return  (
             <div className="CreateEventComponent container px-4 my-5 ">
                 <div className="row gx-5 d-flex align-self-stretch">
-                    <div className="col-lg d-flex align-self-stretch">
+                    <div className="col-xl d-flex align-self-stretch">
                         <div className="pane p-3 border bg-white align-self-stretch flex-fill">
                             <h2 className='text-center'>Create Event</h2>
                             <form onSubmit={this.handleSubmit} noValidate>
@@ -226,24 +223,29 @@ class CreateEventComponent extends React.Component {
                                     </div>
                                 </div>
                                 <div className='row my-4'>
-                                    <div className='col-6'>
+                                    <div className='col-lg-6'>
                                         <div className={`form-group`}>
                                             <label htmlFor="dateInput">Event Date</label>
-                                            <DatePicker
-                                                id='dateInput'
-                                                minDate={Date.now()}
-                                                selected={this.state.fields.date.value}
-                                                onChange={(date) => {
-                                                        const fields = {...this.state.fields};
-                                                        fields.date.value = date;
-                                                        this.setState({fields})
+                                            <div className='react-datepicker-wrapper'>
+                                                <DatePicker
+                                                    id='dateInput'
+                                                    wrapperClassName="react-datepicker-wrapper"
+                                                    minDate={Date.now()}
+                                                    selected={this.state.fields.date.value}
+                                                    onChange={(date) => {
+                                                            const fields = {...this.state.fields};
+                                                            fields.date.value = date;
+                                                            fields.date.valid = true;
+                                                            fields.date.wasValidated = true;
+                                                            this.setState({fields})
+                                                        }
                                                     }
-                                                }
-                                                inline
-                                            />
+                                                    inline
+                                                />
+                                            </div>
                                         </div>        
                                     </div>
-                                    <div className='col-6'>
+                                    <div className='col-lg-6'>
                                          <div className={`form-group`}>
                                             <label htmlFor="formFileLg" className="form-label">Event Thumnail</label>
                                             <div className='file-input-field'>
@@ -258,7 +260,7 @@ class CreateEventComponent extends React.Component {
                                 </div>
 
                                 <div className='row'>
-                                    <div className='col-6'>
+                                    <div className='col-sm-6'>
                                         <div className={`form-group`}>
                                             <label htmlFor="startTimeInput">Start Time</label>
                                             <input  name="startTime" 
@@ -281,7 +283,7 @@ class CreateEventComponent extends React.Component {
                                             </div>
                                         </div>      
                                     </div>
-                                    <div className='col-6'>
+                                    <div className='col-sm-6'>
                                         <div className={`form-group`}>
                                             <label htmlFor="endTimeInput">End Time</label>
                                             <input  name="endTime" 
@@ -313,12 +315,10 @@ class CreateEventComponent extends React.Component {
                                         <button className="btn btn-outline-secondary" type="button" id="button-addon1" onClick={() => this.handleVolunteerChange(-1)}>-</button>
                                         <input  name="volunteers" 
                                                 type="text" 
-                                                className={`form-control ${this.state.fields.volunteers.wasValidated ? this.state.fields.volunteers.valid ? 'is-valid' : 'is-invalid' : ''}`}
+                                                className={`form-control`}
                                                 id="volunteersInput" 
                                                 aria-describedby="volunteersHelp volunteersFeedBack" 
-                                                value={this.state.fields.volunteers.value} 
-                                                onChange={(event) => this.handleUserInput(event)}
-                                                onBlur={(event) => this.handleUserInputBlur(event)}
+                                                value={this.state.fields.volunteers.value}
                                                 required
                                                 disabled
                                         />
@@ -336,7 +336,7 @@ class CreateEventComponent extends React.Component {
                             </form>
                         </div>
                     </div>
-                    <div className="col-lg d-flex align-self-stretch">
+                    <div className="col-xl d-flex align-self-stretch">
                         <div className="pane p-3 border bg-white align-self-stretch flex-fill">
                             <h2 className='text-center'>Preview</h2>
                         </div>
