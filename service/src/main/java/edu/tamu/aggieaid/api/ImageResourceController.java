@@ -1,5 +1,7 @@
 package edu.tamu.aggieaid.api;
 
+import java.nio.file.Path;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -33,10 +35,10 @@ public class ImageResourceController {
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         String message = "";
         try {
-            storageService.save(file);
+            Path filePath = storageService.save(file);
             return ResponseEntity.status(HttpStatus.OK).body(ResourceDataDTO.builder()
-                .name(file.getOriginalFilename())    
-                .url("http://localhost:8080" + "/api/resources//public/" + file.getOriginalFilename())
+                .name(filePath.getFileName().toString())    
+                .url("http://localhost:8080" + "/api/resources/public/" + filePath.getFileName().toString())
                 .build());
         } catch (Exception e) {
             e.printStackTrace();

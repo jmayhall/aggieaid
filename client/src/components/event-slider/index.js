@@ -3,6 +3,8 @@ import Slider from "react-slick";
 import './styles.css';
 import EventThumbnail from '../event-thumbnail';
 import Layout from "../../constants/layout.constants";
+import ApiService from "../../service/api.service";
+import APIPaths from "../../constants/apipath.constants";
 
 export default function EventSlider() {
 
@@ -20,7 +22,16 @@ export default function EventSlider() {
     slidesToScroll: 1,
     arrows: true,
     center: true,
-    cssEase: 'ease-in-out'
+    cssEase: 'ease-in-out',
+    events: []
+  });
+
+  useEffect(() => {
+    ApiService.get(APIPaths.EVENTS).then(r => {
+        r.json().then(res => {
+            setSettings({events: res._embedded.events});
+        })
+    });
   });
 
   useEffect(() => {
@@ -51,48 +62,16 @@ export default function EventSlider() {
       <h2 className="text-center mb-4 text-dark">Checkout These Upcoming Events</h2>
 
       <Slider {...settings}>
-        <div>
-          <EventThumbnail 
-            eventTitle="Event One" 
-            eventDescription="Some quick details about the event.">
-          </EventThumbnail>
-        </div>
-        <div>
-          <EventThumbnail 
-            eventTitle="Event Two" 
-            eventDescription="Some quick details about the event.">
-          </EventThumbnail>
-        </div>
-        <div>
-          <EventThumbnail 
-            eventTitle="Event Three" 
-            eventDescription="Some quick details about the event.">
-          </EventThumbnail>
-        </div>
-        <div>
-          <EventThumbnail 
-            eventTitle="Event Four" 
-            eventDescription="Some quick details about the event.">
-          </EventThumbnail>
-        </div>
-        <div>
-          <EventThumbnail 
-            eventTitle="Event Five" 
-            eventDescription="Some quick details about the event.">
-          </EventThumbnail>
-        </div>
-        <div>
-          <EventThumbnail 
-            eventTitle="Event Six" 
-            eventDescription="Some quick details about the event.">
-          </EventThumbnail>
-        </div>
-        <div>
-          <EventThumbnail 
-            eventTitle="Event Seven" 
-            eventDescription="Some quick details about the event.">
-          </EventThumbnail>
-        </div>
+        {
+            settings.events.map(event =>  
+                <div key={event.id}>
+                    <EventThumbnail
+                        title={event.title}
+                        thumbnailFileName={event.thumbnailFileName}
+                        description="Some quick details about the event.">
+                    </EventThumbnail>
+                </div>)
+        }
       </Slider>
     </div>
     

@@ -6,7 +6,7 @@ import ValidationMessages from '../../constants/validationMessages.constants';
 import DatePicker from 'react-datepicker'
 
 import "react-datepicker/dist/react-datepicker.css";
-
+import EventService from '../../service/event.service';
 
 class CreateEventComponent extends React.Component {
 
@@ -105,7 +105,22 @@ class CreateEventComponent extends React.Component {
 
         ResourceService.upload(this.state.fields.thumbnail.value)
             .then(r => {
-                console.log(r);
+                r.json().then(resourceDataDTO => {
+                   
+                    const thumbnailFileName = resourceDataDTO.name;
+                    EventService.create(
+                        this.state.fields.title.value,
+                        this.state.fields.date.value,
+                        thumbnailFileName,
+                        this.state.fields.startTime.value,
+                        this.state.fields.endTime.value
+                    ). then(createResponse => {
+                        if(createResponse.ok) {
+                            this.props.navigate('/');
+                        }
+                    });
+
+                });
             });
 
     }

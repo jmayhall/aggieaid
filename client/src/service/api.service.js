@@ -10,7 +10,6 @@ const makeAPICall = (path, method, body, extraHeaders) => {
 
     if(!!body) {
         reqOptions.body = body
-        // deafultHeaders['Content-Type'] = 'application/json';
     }
 
     if(!!user.token) {

@@ -82,6 +82,9 @@ public class SecurityConfig {
                 .antMatchers(GET, "/h2", "/h2/**")
                     .permitAll()
 
+                .antMatchers(POST, "/h2", "/h2/**")
+                    .permitAll()
+
                 .antMatchers(GET, "/api/resources/public/**")
                     .permitAll()
 
@@ -89,7 +92,9 @@ public class SecurityConfig {
                     .authenticated();
 
         http.authenticationManager(authManager(http));
-  
+
+        http.headers().frameOptions().disable();
+
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
       
         return http.build();

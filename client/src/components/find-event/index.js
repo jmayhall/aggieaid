@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles.css'
-import UsersComponent from '../users';
+import EventsListComponent from '../events-list';
 
 
 export default class FindEventComponent extends React.Component {
@@ -8,7 +8,7 @@ export default class FindEventComponent extends React.Component {
         return  (
             <div className="FindEventComponent">
                 <h1>Find Event</h1>
-                <UsersComponent></UsersComponent>
+                <EventsListComponent></EventsListComponent>
             </div>
         );
     }

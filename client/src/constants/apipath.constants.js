@@ -8,7 +8,12 @@ const APIPaths = {
     USERS: 'users',
 
     // Resources
-    UPLOAD: 'api/resources/upload'
+    UPLOAD: 'api/resources/upload',
+    PUBLIC: 'api/resources/public',
+
+    // Events
+    EVENTS: 'events'
+
 }
 
 export default APIPaths;
