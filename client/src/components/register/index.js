@@ -91,7 +91,7 @@ class RegisterComponent extends React.Component {
         e.preventDefault();
         const elements = e.target.elements;
         AuthService.register(
-            elements.email.name, 
+            elements.name.value, 
             elements.email.value, 
             elements.password.value
         ).then(res => {

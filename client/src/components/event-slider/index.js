@@ -32,7 +32,7 @@ export default function EventSlider() {
             setSettings({events: res._embedded.events});
         })
     });
-  });
+  }, []);
 
   useEffect(() => {
   
@@ -63,14 +63,14 @@ export default function EventSlider() {
 
       <Slider {...settings}>
         {
-            settings.events.map(event =>  
+            !!settings.events ? settings.events.map(event =>  
                 <div key={event.id}>
                     <EventThumbnail
                         title={event.title}
                         thumbnailFileName={event.thumbnailFileName}
                         description="Some quick details about the event.">
                     </EventThumbnail>
-                </div>)
+                </div>) : null
         }
       </Slider>
     </div>

@@ -1,12 +1,13 @@
 package edu.tamu.aggieaid.domain.repo;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
 import edu.tamu.aggieaid.domain.User;
 
-public interface UserRepo extends CrudRepository<User, Long> {
+public interface UserRepo extends CrudRepository<User, UUID> {
     Optional<User> findByEmail(String email);
     Optional<User> findByUsernameOrEmail(String username, String email);
     Optional<User> findByUsername(String username);

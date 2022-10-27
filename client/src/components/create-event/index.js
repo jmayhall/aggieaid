@@ -7,6 +7,8 @@ import DatePicker from 'react-datepicker'
 
 import "react-datepicker/dist/react-datepicker.css";
 import EventService from '../../service/event.service';
+import AuthService from '../../service/auth.service';
+import APIPaths from '../../constants/apipath.constants';
 
 class CreateEventComponent extends React.Component {
 
@@ -94,6 +96,18 @@ class CreateEventComponent extends React.Component {
                     }, 
                     errors: [],
                     wasValidated: true
+                },
+                description: {
+                    value: '',
+                    displayName: 'Description',
+                    valid: true,
+                    validations: {
+                        max: 1200,
+                        min: 5,
+                        required: true
+                    }, 
+                    errors: [],
+                    wasValidated: true
                 }
             }
         }
@@ -106,14 +120,16 @@ class CreateEventComponent extends React.Component {
         ResourceService.upload(this.state.fields.thumbnail.value)
             .then(r => {
                 r.json().then(resourceDataDTO => {
-                   
                     const thumbnailFileName = resourceDataDTO.name;
                     EventService.create(
                         this.state.fields.title.value,
                         this.state.fields.date.value,
                         thumbnailFileName,
                         this.state.fields.startTime.value,
-                        this.state.fields.endTime.value
+                        this.state.fields.endTime.value,
+                        this.state.fields.volunteers.value,
+                        this.state.fields.description.value,
+                        AuthService.getCurrentUser().id
                     ). then(createResponse => {
                         if(createResponse.ok) {
                             this.props.navigate('/');
