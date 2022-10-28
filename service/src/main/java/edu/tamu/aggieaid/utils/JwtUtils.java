@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import edu.tamu.aggieaid.domain.User;
+import edu.tamu.aggieaid.domain.entity.UserEntity;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -25,7 +25,7 @@ public class JwtUtils {
 
     public String generateJwtToken(Authentication authentication) {
 
-        User userPrincipal = (User) authentication.getPrincipal();
+        UserEntity userPrincipal = (UserEntity) authentication.getPrincipal();
 
         return Jwts.builder()
             .setSubject((userPrincipal.getEmail()))

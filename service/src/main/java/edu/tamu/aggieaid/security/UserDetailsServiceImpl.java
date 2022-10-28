@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.tamu.aggieaid.domain.User;
+import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
 
 @Service
@@ -18,7 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user = userRepository.findByEmail(email)
+    UserEntity user = userRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
 
     return user;

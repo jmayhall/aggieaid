@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import edu.tamu.aggieaid.domain.User;
+import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -39,7 +39,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         logger.info("authenticating");
 
-        User user = userRepo.findByEmail(name)
+        UserEntity user = userRepo.findByEmail(name)
             .orElseThrow(() -> 
                 new UsernameNotFoundException("User not found with email:" + name));
 

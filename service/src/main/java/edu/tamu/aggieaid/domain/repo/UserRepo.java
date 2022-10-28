@@ -5,12 +5,12 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import edu.tamu.aggieaid.domain.User;
+import edu.tamu.aggieaid.domain.entity.UserEntity;
 
-public interface UserRepo extends CrudRepository<User, UUID> {
-    Optional<User> findByEmail(String email);
-    Optional<User> findByUsernameOrEmail(String username, String email);
-    Optional<User> findByUsername(String username);
+public interface UserRepo extends CrudRepository<UserEntity, UUID> {
+    Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findByUsernameOrEmail(String username, String email);
+    Optional<UserEntity> findByUsername(String username);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
 }

@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 
-import edu.tamu.aggieaid.domain.Event;
+import edu.tamu.aggieaid.domain.entity.EventEntity;
 
-public interface EventRepo extends CrudRepository<Event, UUID> {
+public interface EventRepo extends CrudRepository<EventEntity, UUID> {
     
 }

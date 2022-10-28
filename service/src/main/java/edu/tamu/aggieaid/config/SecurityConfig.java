@@ -38,7 +38,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.tamu.aggieaid.domain.User;
+import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
 import edu.tamu.aggieaid.security.CustomAuthenticationProvider;
 import edu.tamu.aggieaid.service.CustomUserDetailsService;

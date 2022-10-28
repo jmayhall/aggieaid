@@ -1,4 +1,4 @@
-package edu.tamu.aggieaid.api;
+package edu.tamu.aggieaid.api.controller;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -21,11 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.tamu.aggieaid.api.dto.ErrorDTO;
 import edu.tamu.aggieaid.api.dto.JwtDTO;
 import edu.tamu.aggieaid.api.dto.LoginDTO;
-import edu.tamu.aggieaid.api.dto.NewUserDTO;
-import edu.tamu.aggieaid.domain.User;
+import edu.tamu.aggieaid.api.dto.UserRegistrationDTO;
+import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
 import edu.tamu.aggieaid.utils.JwtUtils;
 
@@ -48,8 +47,8 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody NewUserDTO newUserDTO) {
-        userRepo.save(User.builder()
+    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO newUserDTO) {
+        userRepo.save(UserEntity.builder()
             .username(newUserDTO.getEmail().split("@", 0)[0])
             .email(newUserDTO.getEmail())
             .name(newUserDTO.getName())
@@ -59,7 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) throws AuthException {
+    public ResponseEntity<JwtDTO> authenticateUser(@Valid @RequestBody LoginDTO loginDTO) throws AuthException {
 
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
@@ -71,7 +70,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         
-        User userDetails = (User) authentication.getPrincipal();    
+        UserEntity userDetails = (UserEntity) authentication.getPrincipal();    
 
         // List<String> roles = userDetails.getAuthorities().stream()
         //     .map(item -> item.getAuthority())

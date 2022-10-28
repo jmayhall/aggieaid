@@ -4,47 +4,43 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.UUID;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.GenericGenerator;
+import edu.tamu.aggieaid.constants.EventValidationsMessages;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+public interface Event {
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+    public UUID getId();
+    public void setId(UUID id);
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Entity
-public class Event {
+    public String getTitle();
+    public void setTitle(String title);
 
-    @Id
-    @GeneratedValue(generator="system-uuid", strategy = GenerationType.AUTO)
-    @GenericGenerator(name="system-uuid", strategy = "uuid2")
-    private UUID id;
+    public String getDescription();
+    public void setDescription(String description);
 
-    private String title;
-    private String description;
-    private Date date; 
-    private String thumbnailFileName;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private int count;
+    public Date getDate();
+    public void setDate(
+        @NotNull(message=EventValidationsMessages.DATE_NULL) 
+        Date date
+    );
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference 
-    private User owner;
-    
+    public String getThumbnailFileName();
+    public void setThumbnailFileName(String thumbnailFileName);
+
+    public LocalTime getStartTime();
+    public void setStartTime(
+        @NotNull(message=EventValidationsMessages.START_TIME_NULL) 
+        LocalTime startTime
+    );
+
+    public LocalTime getEndTime();
+    public void setEndTime(
+        @NotNull(message=EventValidationsMessages.END_TIME_NULL) 
+        LocalTime endTime
+    );
+
+    public int getVolunteerCount();
+    public void setVolunteerCount(int volunteerCount);
+
 }
