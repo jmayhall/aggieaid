@@ -27,6 +27,6 @@ public class UserDTO implements User {
     @Pattern(regexp=ValidationPaterns.VALID_EMAIL, message=ValidationsMessages.EMAIL_NOT_VALID)
     private String email;
 
-    List<UUID> sponsoredEvents;
+    List<@Pattern(regexp=ValidationPaterns.VALID_UUID, message=ValidationsMessages.OWNER_NOT_VALID_UUID) UUID> sponsoredEvents;
     
 }

@@ -28,8 +28,8 @@ export default function EventSlider() {
 
   useEffect(() => {
     ApiService.get(APIPaths.EVENTS).then(r => {
-        r.json().then(res => {
-            setSettings({events: res._embedded.events});
+        r.json().then(events => {
+            setSettings({events});
         })
     });
   }, []);

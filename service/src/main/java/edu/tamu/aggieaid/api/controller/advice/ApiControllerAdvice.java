@@ -13,6 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.tamu.aggieaid.api.dto.ErrorDTO;
 import edu.tamu.aggieaid.exceptions.EventCreationException;
 
+
+/*
+ * 
+ *  The APIControllerAdvice intercepts thrown errors from the REST controllers
+ *  and prepares error responses to return to the client.
+ * 
+ */
+
 @RestController
 @ControllerAdvice
 public class ApiControllerAdvice {

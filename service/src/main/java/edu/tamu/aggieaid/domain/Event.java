@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
-import edu.tamu.aggieaid.constants.EventValidationsMessages;
+import edu.tamu.aggieaid.constants.ValidationsMessages;
 
 public interface Event {
 
@@ -21,7 +21,7 @@ public interface Event {
 
     public Date getDate();
     public void setDate(
-        @NotNull(message=EventValidationsMessages.DATE_NULL) 
+        @NotNull(message=ValidationsMessages.DATE_NULL) 
         Date date
     );
 
@@ -30,13 +30,13 @@ public interface Event {
 
     public LocalTime getStartTime();
     public void setStartTime(
-        @NotNull(message=EventValidationsMessages.START_TIME_NULL) 
+        @NotNull(message=ValidationsMessages.START_TIME_NULL) 
         LocalTime startTime
     );
 
     public LocalTime getEndTime();
     public void setEndTime(
-        @NotNull(message=EventValidationsMessages.END_TIME_NULL) 
+        @NotNull(message=ValidationsMessages.END_TIME_NULL) 
         LocalTime endTime
     );
 

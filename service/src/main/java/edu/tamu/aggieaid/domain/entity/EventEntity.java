@@ -15,12 +15,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import edu.tamu.aggieaid.constants.EventValidationsMessages;
+import edu.tamu.aggieaid.constants.ValidationsMessages;
 import edu.tamu.aggieaid.domain.Event;
-import edu.tamu.aggieaid.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,27 +36,28 @@ public class EventEntity implements Event {
     @Id
     @GeneratedValue(generator="system-uuid", strategy = GenerationType.AUTO)
     @GenericGenerator(name="system-uuid", strategy = "uuid2")
+    @Type(type = "uuid-char")
     private UUID id;
 
-    @NotBlank(message=EventValidationsMessages.TITLE_NULL)
+    @NotBlank(message=ValidationsMessages.TITLE_NULL)
     private String title;
 
-    @NotBlank(message=EventValidationsMessages.DESCRIPTION_NULL)
+    //@NotBlank(message=EventValidationsMessages.DESCRIPTION_NULL)
     private String description;
 
-    @NotNull(message=EventValidationsMessages.DATE_NULL)
+    @NotNull(message=ValidationsMessages.DATE_NULL)
     private Date date; 
 
-    @NotBlank(message=EventValidationsMessages.THUMBNAIL_FILENAME_NULL)
+    @NotBlank(message=ValidationsMessages.THUMBNAIL_FILENAME_NULL)
     private String thumbnailFileName;
 
-    @NotNull(message=EventValidationsMessages.START_TIME_NULL)
+    @NotNull(message=ValidationsMessages.START_TIME_NULL)
     private LocalTime startTime;
     
-    @NotNull(message=EventValidationsMessages.END_TIME_NULL)
+    @NotNull(message=ValidationsMessages.END_TIME_NULL)
     private LocalTime endTime;
     
-    @Min(value = 5, message = EventValidationsMessages.VOLUNTEER_MIN)
+    @Min(value = 5, message = ValidationsMessages.VOLUNTEER_MIN)
     private int volunteerCount;
 
     @ManyToOne

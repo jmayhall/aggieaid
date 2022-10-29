@@ -17,15 +17,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import edu.tamu.aggieaid.constants.ValidationsMessages;
 import edu.tamu.aggieaid.constants.ValidationPaterns;
-import edu.tamu.aggieaid.domain.Event;
+import edu.tamu.aggieaid.constants.ValidationsMessages;
 import edu.tamu.aggieaid.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +46,7 @@ public class UserEntity implements User, UserDetails {
     @Id
     @GeneratedValue(generator="system-uuid", strategy = GenerationType.AUTO)
     @GenericGenerator(name="system-uuid", strategy = "uuid2")
+    @Type(type = "uuid-char")
     private UUID id;
 
     @NotBlank(message=ValidationsMessages.NAME_NULL)

@@ -20,6 +20,13 @@ import edu.tamu.aggieaid.api.dto.ErrorDTO;
 import edu.tamu.aggieaid.api.dto.ResourceDataDTO;
 import edu.tamu.aggieaid.service.FileStorageService;
 
+
+/*
+ * 
+ *  The ImageResourceController exposes a REST API for the upload and retreval of image resources
+ * 
+ */
+
 @Controller()
 @RequestMapping("/api/resources")
 public class ImageResourceController {

@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.tamu.aggieaid.api.controller.advice.ApiControllerAdvice;
 import edu.tamu.aggieaid.api.dto.EventDTO;
 import edu.tamu.aggieaid.domain.Event;
 import edu.tamu.aggieaid.domain.User;
@@ -28,6 +24,13 @@ import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.EventRepo;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
 import edu.tamu.aggieaid.exceptions.EventCreationException;
+
+
+/*
+ * 
+ *  The EventController handles CRUD actions for the Event domain
+ * 
+ */
 
 @RestController
 @RequestMapping("/api/event")
@@ -95,6 +98,7 @@ public class EventController {
                 .startTime(ee.getStartTime())
                 .endTime(ee.getEndTime())
                 .volunteerCount(ee.getVolunteerCount())
+                .owner(ee.getOwner().getId())
                 .build())
             .toList();
 

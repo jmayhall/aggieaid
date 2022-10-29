@@ -28,6 +28,13 @@ import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
 import edu.tamu.aggieaid.utils.JwtUtils;
 
+
+/*
+ * 
+ *  The AuthController handles the first order business logic for authentication related actions.
+ * 
+ */
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

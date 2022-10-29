@@ -22,4 +22,13 @@ public class ValidationsMessages {
     public static final String OWNER_NULL = "The 'owner' field cannot be null";
     public static final String OWNER_NOT_VALID_UUID = "The 'owner' field must be a valud UUID";
 
+    // Token validation messages
+    public static final String JWT_NULL = "The 'token' field cannot be blank";
+    public static final String JWT_NOT_VALID = "The 'token' field must be a valid JWT";
+    public static final String TOKEN_TYPE_NOT_VALID = "The 'type' field must either be 'Bearer' or 'Refresh'";
+    public static final String ID_NOT_VALID_UUID = "The 'id' field must be a valid UUID";
+    public static final String TOKEN_TYPE_NULL = "The 'type' field cannot be blank";
+    public static final String ID_NULL = "The 'id' field cannot be blank";
+    public static final String URL_NULL = "The 'url' field cannot be blank";
+
 }
