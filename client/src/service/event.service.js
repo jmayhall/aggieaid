@@ -4,10 +4,9 @@ import Events from "../constants/events.constants";
 
 export default class EventService {
 
-    static async create(title, date, thumbnailFileName, startTime, endTime, count, description, id) {
-        const owner = {id}
+    static async create(title, date, thumbnailFileName, startTime, endTime, volunteerCount, description, owner) {
         const reqPromise = ApiService.post(APIPaths.EVENTS, {
-            title, date, thumbnailFileName, startTime, endTime, count, description, owner
+            title, date, thumbnailFileName, startTime, endTime, volunteerCount, description, owner
         });
 
         reqPromise.then(r => {

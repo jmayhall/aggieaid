@@ -8,7 +8,6 @@ import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import EventService from '../../service/event.service';
 import AuthService from '../../service/auth.service';
-import APIPaths from '../../constants/apipath.constants';
 
 class CreateEventComponent extends React.Component {
 
@@ -133,6 +132,10 @@ class CreateEventComponent extends React.Component {
                     ). then(createResponse => {
                         if(createResponse.ok) {
                             this.props.navigate('/');
+                        } else {
+                            createResponse.text().then(e => {
+                                this.setState({formError: JSON.parse(e).message});
+                            });   
                         }
                     });
 

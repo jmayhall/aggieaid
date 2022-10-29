@@ -88,7 +88,7 @@ public class SecurityConfig {
                 .antMatchers(GET, "/api/resources/public/**")
                     .permitAll()
                 
-                .antMatchers(GET, "/events", "/events/**")
+                .antMatchers(GET, "/api/event", "/api/event/**")
                     .permitAll()
 
                 .anyRequest()

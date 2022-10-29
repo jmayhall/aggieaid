@@ -12,7 +12,7 @@ const APIPaths = {
     PUBLIC: 'api/resources/public',
 
     // Events
-    EVENTS: 'events'
+    EVENTS: 'api/event'
 
 }
 

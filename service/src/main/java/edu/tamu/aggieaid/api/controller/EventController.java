@@ -1,17 +1,25 @@
 package edu.tamu.aggieaid.api.controller;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
 
-import org.hibernate.action.internal.EntityActionVetoException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Streamable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.tamu.aggieaid.api.controller.advice.ApiControllerAdvice;
 import edu.tamu.aggieaid.api.dto.EventDTO;
 import edu.tamu.aggieaid.domain.Event;
 import edu.tamu.aggieaid.domain.User;
@@ -25,17 +33,21 @@ import edu.tamu.aggieaid.exceptions.EventCreationException;
 @RequestMapping("/api/event")
 public class EventController {
 
-    @Autowired
-    EventRepo eventRepo;
+    private static final Logger logger = LoggerFactory.getLogger(EventController.class);
 
     @Autowired
-    UserRepo userRepo;
+    private EventRepo eventRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     @PostMapping
-    public ResponseEntity<EventDTO> createEvent(EventDTO eventDto) throws EventCreationException {
+    public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDto) throws EventCreationException {
+
+        logger.info(String.format("Creating event %s", eventDto.getTitle()));
 
         User user = userRepo.findById(eventDto.getOwner())
-            .orElseThrow(() -> new EntityNotFoundException("User Not Found with id: " + eventDto.getOwner()));
+            .orElseThrow(() -> new EntityNotFoundException(String.format("User Not Found with id: %s", eventDto.getOwner())));
 
         Event newEvent = eventRepo.save(EventEntity.builder()
             .title(eventDto.getTitle())
@@ -67,6 +79,26 @@ public class EventController {
             .volunteerCount(newEvent.getVolunteerCount())
             .owner(user.getId())
             .build());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EventDTO>> getEvents() {
+    
+        List<EventDTO> events = Streamable.of(eventRepo.findAll())
+            .stream()
+            .map(ee -> EventDTO.builder()
+                .id(ee.getId())
+                .title(ee.getTitle())
+                .description(ee.getDescription())
+                .thumbnailFileName(ee.getThumbnailFileName())
+                .date(ee.getDate())
+                .startTime(ee.getStartTime())
+                .endTime(ee.getEndTime())
+                .volunteerCount(ee.getVolunteerCount())
+                .build())
+            .toList();
+
+        return ResponseEntity.ok(events);
     }
     
 }
