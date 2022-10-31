@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/jeremythuff/aggieaid/badge.svg?branch=main)](https://coveralls.io/github/jeremythuff/aggieaid?branch=main)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
