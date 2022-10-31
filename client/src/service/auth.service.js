@@ -46,7 +46,8 @@ export default class AuthService {
     }
 
     static isAuthenticated() {
-        return !!this.getCurrentUser();
+        const user = this.getCurrentUser()
+        return !!this.getCurrentUser() && new Date(user.expiration) > Date.now();
     }
 
     static isKnownMachine() {

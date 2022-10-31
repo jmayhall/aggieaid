@@ -1,9 +1,11 @@
 package edu.tamu.aggieaid.api.dto;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import edu.tamu.aggieaid.constants.ValidationPaterns;
@@ -44,6 +46,9 @@ public class JwtDTO {
     @Pattern(regexp=ValidationPaterns.VALID_EMAIL, message=ValidationsMessages.EMAIL_NOT_VALID)
     @NotBlank( message=ValidationsMessages.EMAIL_NULL)
     private String email;
+
+    @NotNull(message=ValidationsMessages.DATE_NULL)
+    private Date expiration;
     
     private List<String> roles;
 }

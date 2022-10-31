@@ -17,12 +17,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import edu.tamu.aggieaid.utils.JwtUtils;
+import edu.tamu.aggieaid.utils.JwtService;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtService jwtServie;
     
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -34,8 +34,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         throws ServletException, IOException {
       try {
         String jwt = parseJwt(request);
-        if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-          String email = jwtUtils.getEmailFromJwtToken(jwt);
+        if (jwt != null && jwtServie.validateJwtToken(jwt)) {
+          String email = jwtServie.getEmailFromJwtToken(jwt);
   
           UserDetails userDetails = userDetailsService.loadUserByUsername(email);
           UsernamePasswordAuthenticationToken authentication =

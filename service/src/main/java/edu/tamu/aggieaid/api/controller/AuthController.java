@@ -26,7 +26,7 @@ import edu.tamu.aggieaid.api.dto.LoginDTO;
 import edu.tamu.aggieaid.api.dto.UserRegistrationDTO;
 import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
-import edu.tamu.aggieaid.utils.JwtUtils;
+import edu.tamu.aggieaid.utils.JwtService;
 
 
 /*
@@ -51,7 +51,7 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    JwtUtils jwtUtils;
+    JwtService jwtServie;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO newUserDTO) {
@@ -75,7 +75,7 @@ public class AuthController {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        String jwt = jwtServie.generateJwtToken(authentication);
         
         UserEntity userDetails = (UserEntity) authentication.getPrincipal();    
 
@@ -89,6 +89,7 @@ public class AuthController {
             .username(userDetails.getUsername())
             .email(userDetails.getEmail())
             .roles(new ArrayList<>())
+            .expiration(jwtServie.getExpirationFromJwtToken(jwt))
             .build());
     }
 
