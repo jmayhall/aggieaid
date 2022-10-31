@@ -11,14 +11,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - working-directory: ./client
-        run: npm install
-      - working-directory: ./client
-        run: npm test:ci
+          working-directory: ./client
+      - run: npm install
+      - run: npm test:ci
 
       - name: Tests ✅
         if: ${{ success() }}
-        working-directory: ./client
         run: |
           curl --request POST \
           --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
@@ -30,10 +28,10 @@ jobs:
             "description": "Tests passed",
             "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           }'
+        working-directory: ./client
 
       - name: Tests 🚨
         if: ${{ failure() }}
-        working-directory: ./client
         run: |
           curl --request POST \
           --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
@@ -45,3 +43,4 @@ jobs:
             "description": "Tests failed",
             "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           }'
+        working-directory: ./client
