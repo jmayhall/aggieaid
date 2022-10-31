@@ -13,10 +13,12 @@ jobs:
           node-version: '12'
       - working-directory: ./client
       - run: npm install
+      - working-directory: ./client
       - run: npm test:ci
 
       - name: Tests ✅
         if: ${{ success() }}
+        working-directory: ./client
         run: |
           curl --request POST \
           --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
@@ -31,6 +33,7 @@ jobs:
 
       - name: Tests 🚨
         if: ${{ failure() }}
+        working-directory: ./client
         run: |
           curl --request POST \
           --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
