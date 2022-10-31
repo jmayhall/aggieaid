@@ -12,9 +12,9 @@ jobs:
         with:
           node-version: '12'
       - working-directory: ./client
-      - run: npm install
+        run: npm install
       - working-directory: ./client
-      - run: npm test:ci
+        run: npm test:ci
 
       - name: Tests ✅
         if: ${{ success() }}
