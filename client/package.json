@@ -23,7 +23,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:ci": "npm run test -- --coverage --ci --watchAll=false",
+    "test:ci": "CI=true&&npm run test -- --coverage --ci --watchAll=false",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
