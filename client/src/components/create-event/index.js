@@ -68,33 +68,32 @@ class CreateEventComponent extends React.Component {
                 thumbnailOffsetX: {
                     value: 0,
                     displayName: 'Event Thumbnail Offset X',
-                    valid: undefined,
+                    valid: true,
                     validations: {
-                        required: false,
-                        image: true,
+                        required: false
                     },
                     errors: [],
-                    wasValidated: false
+                    wasValidated: true
                 },
                 thumbnailOffsetY: {
                     value: 0,
                     displayName: 'Event Thumbnail Offset Y',
-                    valid: undefined,
+                    valid: true,
                     validations: {
                         required: false
                     },
                     errors: [],
-                    wasValidated: false
+                    wasValidated: true
                 },
                 thumbnailOffsetZoom: {
                     value: 1,
                     displayName: 'Event Thumbnail Offset Zoom',
-                    valid: undefined,
+                    valid: true,
                     validations: {
                         required: false
                     },
                     errors: [],
-                    wasValidated: false
+                    wasValidated: true
                 },
                 startTime: {
                     value: '',
@@ -120,7 +119,7 @@ class CreateEventComponent extends React.Component {
                 },
                 volunteers: {
                     value: 5,
-                    displayName: 'Aggies',
+                    displayName: 'How Many',
                     valid: true,
                     validations: {
                         max: 200,
@@ -131,17 +130,29 @@ class CreateEventComponent extends React.Component {
                     errors: [],
                     wasValidated: true
                 },
+                shortDescription: {
+                    value: '',
+                    displayName: 'Short Description',
+                    valid: false,
+                    validations: {
+                        max: 125,
+                        min: 25,
+                        required: true
+                    }, 
+                    errors: [],
+                    wasValidated: false
+                },
                 description: {
                     value: '',
-                    displayName: 'Description',
-                    valid: true,
+                    displayName: 'Full Description',
+                    valid: false,
                     validations: {
                         max: 1200,
                         min: 5,
                         required: true
                     }, 
                     errors: [],
-                    wasValidated: true
+                    wasValidated: false
                 }
             }
         }
@@ -159,10 +170,14 @@ class CreateEventComponent extends React.Component {
                         this.state.fields.title.value,
                         this.state.fields.date.value,
                         thumbnailFileName,
+                        this.state.fields.thumbnailOffsetX.value,
+                        this.state.fields.thumbnailOffsetY.value,
+                        this.state.fields.thumbnailOffsetZoom.value,
                         this.state.fields.startTime.value,
                         this.state.fields.endTime.value,
                         this.state.fields.volunteers.value,
                         this.state.fields.description.value,
+                        this.state.fields.shortDescription.value,
                         AuthService.getCurrentUser().id
                     ). then(createResponse => {
                         if(createResponse.ok) {
@@ -223,7 +238,7 @@ class CreateEventComponent extends React.Component {
         fields.thumbnailOffsetX.value = 0;
         fields.thumbnailOffsetY.value = 0;
         fields.thumbnailOffsetZoom.value = 1;
-        
+
         this.setState({fields, previewUrl});
     }
 
@@ -327,7 +342,7 @@ class CreateEventComponent extends React.Component {
                                     <div className={`tab-pane fade ${this.state.activeTabName === 'basic' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
 
                                         <div className={`form-group`}>
-                                            <label htmlFor="titleInput">Title</label>
+                                            <label htmlFor="titleInput">{this.state.fields.title.displayName}</label>
                                             <input  name="title" 
                                                     type="text" 
                                                     className={`form-control ${this.state.fields.title.wasValidated ? this.state.fields.title.valid ? 'is-valid' : 'is-invalid' : ''}`}
@@ -348,7 +363,7 @@ class CreateEventComponent extends React.Component {
                                         </div>
 
                                         <div className={`form-group`}>
-                                            <label htmlFor="formFileLg" className="form-label">Event Thumnail</label>
+                                            <label htmlFor="formFileLg" className="form-label">{this.state.fields.thumbnail.displayName}</label>
                                             <div className='file-input-field'>
                                                 <div className='preview'>
                                                     <img className={!this.state.previewUrl ? 'd-none' : ''} src={this.state.previewUrl} alt="Event Thumnail" />
@@ -358,21 +373,44 @@ class CreateEventComponent extends React.Component {
                                             </div>
                                         </div>
 
-                                        <label htmlFor="offsetX" className="form-label">Offset X</label>
+                                        <label htmlFor="offsetX" className="form-label">{this.state.fields.thumbnailOffsetX.displayName}</label>
                                         <input name="x" type="range" className="form-range" min="-50" max="50" step="1" id="offsetX" onChange={(e) => this.handleOffsetChange(e)} value={this.state.fields.thumbnailOffsetX.value}></input>
 
-                                        <label htmlFor="offsetY" className="form-label">Offset Y</label>
+                                        <label htmlFor="offsetY" className="form-label">{this.state.fields.thumbnailOffsetY.displayName}</label>
                                         <input name="y" type="range" className="form-range" min="-50" max="50" step="1" id="offsetY" onChange={(e) => this.handleOffsetChange(e)} value={this.state.fields.thumbnailOffsetY.value}></input>
 
-                                        <label htmlFor="offsetZoom" className="form-label">Zoom</label>
+                                        <label htmlFor="offsetZoom" className="form-label">{this.state.fields.thumbnailOffsetZoom.displayName}</label>
                                         <input name="zoom" type="range" className="form-range" min="0.5" max="1.5" step="0.01" id="offsetZoom" onChange={(e) => this.handleOffsetChange(e)} value={this.state.fields.thumbnailOffsetZoom.value}></input>
 
 
                                     </div>
 
                                     <div className={`tab-pane fade ${this.state.activeTabName === 'general' ? 'active show' : ''}`} id="create-event-general" role="tabpanel" aria-labelledby="general-tab">
+
                                         <div className={`form-group`}>
-                                            <label htmlFor="dateInput">Event Date</label>
+                                            <label htmlFor="shortDescriptionInput">{this.state.fields.shortDescription.displayName}</label>
+                                            <textarea  name="shortDescription" 
+                                                    type="text" 
+                                                    className={`form-control ${this.state.fields.shortDescription.wasValidated ? this.state.fields.shortDescription.valid ? 'is-valid' : 'is-invalid' : ''}`}
+                                                    id="shortDescriptionInput" 
+                                                    aria-describedby="shortDescriptionHelp shortDescriptionFeedBack" 
+                                                    rows="2"
+                                                    placeholder="Enter a Short Description" 
+                                                    value={this.state.fields.shortDescription.value} 
+                                                    onChange={(event) => this.handleUserInput(event)}
+                                                    onBlur={(event) => this.handleUserInputBlur(event)}
+                                                    required
+                                            ></textarea>
+                                            <small id="shortDescriptionHelp" className={`form-text text-muted ${this.state.fields.shortDescription.valid || !this.state.fields.shortDescription.wasValidated ? '' : 'd-none'}`}>Please input the Event's Short Description</small>
+                                            <div id="shortDescriptionFeedBack" className="invalid-feedback">
+                                                {
+                                                    this.state.fields.shortDescription.errors.map(m => <li key={m}>{m}</li>)
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <div className={`form-group`}>
+                                            <label htmlFor="dateInput">{this.state.fields.date.displayName}</label>
                                             <div className='react-datepicker-wrapper'>
                                                 <DatePicker
                                                     id='dateInput'
@@ -395,7 +433,7 @@ class CreateEventComponent extends React.Component {
                                         <div className='row'>
                                             <div className='col-sm-6'>
                                                 <div className={`form-group`}>
-                                                    <label htmlFor="startTimeInput">Start Time</label>
+                                                    <label htmlFor="startTimeInput">{this.state.fields.startTime.displayName}</label>
                                                     <input  name="startTime" 
                                                             type="time"
                                                             step="3600"
@@ -418,7 +456,7 @@ class CreateEventComponent extends React.Component {
                                             </div>
                                             <div className='col-sm-6'>
                                                 <div className={`form-group`}>
-                                                    <label htmlFor="endTimeInput">End Time</label>
+                                                    <label htmlFor="endTimeInput">{this.state.fields.endTime.displayName}</label>
                                                     <input  name="endTime" 
                                                             type="time"
                                                             step="3600000"
@@ -439,8 +477,8 @@ class CreateEventComponent extends React.Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className={`form-group m-auto volunteers-form-group my-5`}>
-                                                <label htmlFor="volunteersInput">How many</label>
+                                            <div className={`form-group m-auto volunteers-form-group`}>
+                                                <label htmlFor="volunteersInput">{this.state.fields.volunteers.displayName}</label>
                                                 <div className="input-group mb-3">
                                                 <button className="btn btn-outline-secondary" type="button" id="button-addon1" onClick={() => this.handleVolunteerChange(-10)}>-10</button>
                                                     <button className="btn btn-outline-secondary" type="button" id="button-addon1" onClick={() => this.handleVolunteerChange(-1)}>-</button>
@@ -468,6 +506,27 @@ class CreateEventComponent extends React.Component {
 
                                     <div className={`tab-pane fade ${this.state.activeTabName === 'detailed' ? 'active show' : ''}`} id="create-event-detailed" role="tabpanel" aria-labelledby="detailed-tab">
                                         
+                                        <div className={`form-group`}>
+                                            <label htmlFor="descriptionInput">{this.state.fields.description.displayName}</label>
+                                            <textarea  name="description" 
+                                                    type="text" 
+                                                    className={`form-control ${this.state.fields.description.wasValidated ? this.state.fields.description.valid ? 'is-valid' : 'is-invalid' : ''}`}
+                                                    id="descriptionInput" 
+                                                    aria-describedby="descriptionHelp descriptionFeedBack" 
+                                                    rows="10"
+                                                    placeholder="Enter Description" 
+                                                    value={this.state.fields.description.value} 
+                                                    onChange={(event) => this.handleUserInput(event)}
+                                                    onBlur={(event) => this.handleUserInputBlur(event)}
+                                                    required
+                                            ></textarea>
+                                            <small id="descriptionHelp" className={`form-text text-muted ${this.state.fields.description.valid || !this.state.fields.description.wasValidated ? '' : 'd-none'}`}>Please input the Event's Description</small>
+                                            <div id="descriptionFeedBack" className="invalid-feedback">
+                                                {
+                                                    this.state.fields.description.errors.map(m => <li key={m}>{m}</li>)
+                                                }
+                                            </div>
+                                        </div>
                                         
                                     </div>
                                 </div>                                

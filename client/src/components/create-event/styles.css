@@ -8,7 +8,7 @@
 }
 
 .CreateEventComponent form {
-    min-height: 750px;
+    min-height: 760px;
 }
 
 .CreateEventComponent .file-input-field {
@@ -117,3 +117,13 @@
     text-align: center;
 }
 
+.CreateEventComponent label {
+    font-weight: bold;
+    font-size: 1.15rem;
+    color: #50565d
+}
+
+input[type="range"]::-webkit-slider-thumb,
+input[type="range"]::-moz-range-thumb {
+    background-color: #007777;
+ }

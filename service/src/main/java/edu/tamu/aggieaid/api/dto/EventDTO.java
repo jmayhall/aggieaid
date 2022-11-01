@@ -34,11 +34,20 @@ public class EventDTO implements Event {
     @NotBlank(message=ValidationsMessages.DESCRIPTION_NULL)
     private String description;
 
+    @NotBlank(message=ValidationsMessages.SHORT_DESCRIPTION_NULL)
+    private String shortDescription;
+
     @NotNull(message=ValidationsMessages.DATE_NULL)
     private Date date; 
 
     @NotBlank(message=ValidationsMessages.THUMBNAIL_FILENAME_NULL)
     private String thumbnailFileName;
+
+    private float thumbnailXOffset;
+
+    private float thumbnailYOffset;
+
+    private float thumbnailZoomOffset;
 
     @NotNull(message=ValidationsMessages.START_TIME_NULL)
     private LocalTime startTime;

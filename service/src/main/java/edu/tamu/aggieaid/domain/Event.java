@@ -19,6 +19,9 @@ public interface Event {
     public String getDescription();
     public void setDescription(String description);
 
+    public String getShortDescription();
+    public void setShortDescription(String description);
+
     public Date getDate();
     public void setDate(
         @NotNull(message=ValidationsMessages.DATE_NULL) 
@@ -27,6 +30,15 @@ public interface Event {
 
     public String getThumbnailFileName();
     public void setThumbnailFileName(String thumbnailFileName);
+
+    public float getThumbnailXOffset();
+    public void setThumbnailXOffset(float xOffset);
+
+    public float getThumbnailYOffset();
+    public void setThumbnailYOffset(float xOffset);
+
+    public float getThumbnailZoomOffset();
+    public void setThumbnailZoomOffset(float xOffset);
 
     public LocalTime getStartTime();
     public void setStartTime(

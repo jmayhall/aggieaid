@@ -13,7 +13,8 @@ public class ValidationsMessages {
 
     // Event validation messages
     public static final String TITLE_NULL = "The 'title' field cannot be blank";
-    public static final String DESCRIPTION_NULL = "The 'username' field cannot be blank";
+    public static final String DESCRIPTION_NULL = "The 'description' field cannot be blank";
+    public static final String SHORT_DESCRIPTION_NULL = "The 'short description' field cannot be blank";
     public static final String DATE_NULL = "The 'date' field cannot be null";
     public static final String THUMBNAIL_FILENAME_NULL = "The 'thumbnailFileName' field cannot be null";
     public static final String VOLUNTEER_MIN = "The 'volunteerCount' must be greater then 5";

@@ -4,9 +4,23 @@ import Events from "../constants/events.constants";
 
 export default class EventService {
 
-    static async create(title, date, thumbnailFileName, startTime, endTime, volunteerCount, description, owner) {
+    static async create(
+        title, 
+        date, 
+        thumbnailFileName, 
+        thumbnailXOffset, 
+        thumbnailYOffset, 
+        thumbnailZoomOffset, 
+        startTime, 
+        endTime, 
+        volunteerCount, 
+        description, 
+        shortDescription, 
+        owner) 
+    {
+        
         const reqPromise = ApiService.post(APIPaths.EVENTS, {
-            title, date, thumbnailFileName, startTime, endTime, volunteerCount, description, owner
+            title, date, thumbnailFileName, thumbnailXOffset, thumbnailYOffset, thumbnailZoomOffset,  startTime, endTime, volunteerCount, description, shortDescription, owner
         });
 
         reqPromise.then(r => {

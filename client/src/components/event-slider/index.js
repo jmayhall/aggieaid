@@ -66,9 +66,13 @@ export default function EventSlider() {
             !!settings.events ? settings.events.map(event =>  
                 <div key={event.id}>
                     <EventThumbnail
-                        title={event.title}
-                        thumbnailFileName={event.thumbnailFileName}
-                        description="Some quick details about the event.">
+                      title={event.title}
+                      description={event.shortDescription}
+                      thumbnailFileName={event.thumbnailFileName}
+                      offsetX={event.thumbnailXOffset} 
+                      offsetY={event.thumbnailYOffset} 
+                      offsetZoom={event.thumbnailZoomOffset}
+                    >
                     </EventThumbnail>
                 </div>) : null
         }
