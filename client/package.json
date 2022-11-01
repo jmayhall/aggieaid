@@ -35,8 +35,7 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
-      "!<rootDir>/node_modules/",
-      "!<rootDir>/path/to/dir/"
+      "!<rootDir>/node_modules/"
     ],
     "coverageThreshold": {
       "global": {
@@ -46,7 +45,7 @@
         "statements": 5
       }
     },
-    "coverageReporters": ["text"]
+    "coverageReporters": ["text", "lcov"]
   },
   "browserslist": {
     "production": [
