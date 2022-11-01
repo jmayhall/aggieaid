@@ -31,7 +31,6 @@ import edu.tamu.aggieaid.exceptions.EventCreationException;
  *  The EventController handles CRUD actions for the Event domain
  * 
  */
-
 @RestController
 @RequestMapping("/api/event")
 public class EventController {

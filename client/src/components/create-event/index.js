@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import EventService from '../../service/event.service';
 import AuthService from '../../service/auth.service';
 import EventThumbnail from '../event-thumbnail';
+import EventResult from '../event-result';
 
 class CreateEventComponent extends React.Component {
 
@@ -539,10 +540,25 @@ class CreateEventComponent extends React.Component {
                             <h2 className='text-center'>Preview</h2>
                             <div className="tab-content" id="myTabContent">
                                 <div className={`tab-pane fade ${this.state.activeTabName === 'basic' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
-                                    <EventThumbnail title={this.state.fields.title.value} preview={this.state.previewUrl} offsetX={this.state.fields.thumbnailOffsetX.value} offsetY={this.state.fields.thumbnailOffsetY.value} offsetZoom={this.state.fields.thumbnailOffsetZoom.value}></EventThumbnail>
+                                    <EventThumbnail 
+                                        title={this.state.fields.title.value} 
+                                        preview={this.state.previewUrl} 
+                                        offsetX={this.state.fields.thumbnailOffsetX.value} 
+                                        offsetY={this.state.fields.thumbnailOffsetY.value} 
+                                        offsetZoom={this.state.fields.thumbnailOffsetZoom.value}>
+                                    </EventThumbnail>
                                 </div>
                                 <div className={`tab-pane fade ${this.state.activeTabName === 'general' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
-                                    
+                                    <EventResult 
+                                        title={this.state.fields.title.value}
+                                        username={AuthService.getCurrentUser().username}
+                                        shortDescription={this.state.fields.shortDescription.value}
+                                        volunteers={this.state.fields.volunteers.value}
+                                        preview={this.state.previewUrl} 
+                                        offsetX={this.state.fields.thumbnailOffsetX.value} 
+                                        offsetY={this.state.fields.thumbnailOffsetY.value} 
+                                        offsetZoom={this.state.fields.thumbnailOffsetZoom.value}>
+                                    </EventResult>
                                 </div>
                                 <div className={`tab-pane fade ${this.state.activeTabName === 'detailed' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
                                     
