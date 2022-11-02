@@ -31,8 +31,8 @@ export default class EventThumbnailComponent extends React.Component {
                         </div>
                         <div className='row'>
                             <div className='col d-flex align-items-end'>
-                                <span><i className="bi bi-people-fill"></i> {this.props.currentVolunteers || 0} / {this.props.volunteers || 5}</span>
-                                <span><i className="bi bi-clock ms-3"></i> {this.props.date || "11.6.83"} @ {this.props.timeStart || "12pm"}-{this.props.timeEnd || "1pm"}</span>
+                                <small className="text-muted"><i className="bi bi-people-fill"></i> {this.props.currentVolunteers || 0} / {this.props.volunteers || 5}</small>
+                                <small className="text-muted"><i className="bi bi-clock ms-3"></i> {new Date(this.props.date).toLocaleDateString() || "11.6.83"} @ {this.props.timeStart || "12pm"}-{this.props.timeEnd || "1pm"}</small>
                             </div>
                             <div className='col d-flex justify-content-end'>
                                 <button className="btn btn-secondary">More Info</button>

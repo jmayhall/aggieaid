@@ -538,7 +538,7 @@ class CreateEventComponent extends React.Component {
                     <div className="col-xl d-flex align-self-stretch">
                         <div className="pane p-3 border bg-white align-self-stretch flex-fill">
                             <h2 className='text-center'>Preview</h2>
-                            <div className="tab-content" id="myTabContent">
+                            <div className="tab-content d-flex justify-content-center align-items-center align-self-stretch flex-fill h-75" id="myTabContent">
                                 <div className={`tab-pane fade ${this.state.activeTabName === 'basic' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
                                     <EventThumbnail 
                                         title={this.state.fields.title.value} 
@@ -557,7 +557,10 @@ class CreateEventComponent extends React.Component {
                                         preview={this.state.previewUrl} 
                                         offsetX={this.state.fields.thumbnailOffsetX.value} 
                                         offsetY={this.state.fields.thumbnailOffsetY.value} 
-                                        offsetZoom={this.state.fields.thumbnailOffsetZoom.value}>
+                                        offsetZoom={this.state.fields.thumbnailOffsetZoom.value}
+                                        date={this.state.fields.date.value}
+                                        timeStart={this.state.fields.startTime.value.split(":")[0]}
+                                        timeEnd={this.state.fields.endTime.value.split(":")[0]}>
                                     </EventResult>
                                 </div>
                                 <div className={`tab-pane fade ${this.state.activeTabName === 'detailed' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
