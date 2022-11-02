@@ -3,7 +3,7 @@
 # aggieaid
 Updated: 11/2/2022 2:05PM CST
 
-We can put [Aggie Aid Logo] here! I would do it myself but I don't have access to push files
+![Aggie Aid Logo](https://github.com/jeremythuff/aggieaid/blob/ryan/AggieAidLogo.PNG)
 
 ## Purpose
 Aggie Aid is a platform designed to connect Texas A&M University students with worthwhile volunteer oppertunities in the local Bryan/College Station area. Our team's overall goal is to encourage students to engage in one of Texas A&M core values: selfless service.
