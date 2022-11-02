@@ -557,7 +557,7 @@ class CreateEventComponent extends React.Component {
                                 <div className={`tab-pane fade ${this.state.activeTabName === 'general' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
                                     <EventResult 
                                         title={this.state.fields.title.value}
-                                        username={AuthService.getCurrentUser().username}
+                                        username={AuthService.getCurrentUser()?.username}
                                         shortDescription={this.state.fields.shortDescription.value}
                                         volunteers={this.state.fields.volunteers.value}
                                         preview={this.state.previewUrl} 
@@ -572,7 +572,7 @@ class CreateEventComponent extends React.Component {
                                 <div className={`tab-pane fade ${this.state.activeTabName === 'detailed' ? 'active show' : ''} w-100 h-100`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
                                     <EventDetailsComponent
                                         title={this.state.fields.title.value}
-                                        username={AuthService.getCurrentUser().username}
+                                        username={AuthService.getCurrentUser()?.username}
                                         shortDescription={this.state.fields.shortDescription.value}
                                         description={this.state.fields.description.value}
                                         volunteers={this.state.fields.volunteers.value}
