@@ -351,7 +351,7 @@ class CreateEventComponent extends React.Component {
                                                     <img className={!this.state.previewUrl ? 'd-none' : ''} src={this.state.previewUrl} alt="Event Thumnail" />
                                                     <i className={`bi bi-upload ${!!this.state.previewUrl ? 'd-none' : ''}`}></i>
                                                 </div>
-                                                <input id="formFileLg form-control" type="file" onChange={this.handleFileSelection} />
+                                                <input id="formFileLg form-control" type="file" accept="image/*" onChange={this.handleFileSelection} />
                                             </div>
                                         </div>
 
@@ -516,22 +516,59 @@ class CreateEventComponent extends React.Component {
                                 <div className='mt-auto'>
                                     <ul className="nav nav-pills nav-fill my-3">
                                         <li className="nav-item" onClick={() => this.handleTabChange("basic")}>
-                                            <span className={`nav-link ${this.state.activeTabName === 'basic' ? 'active' : ''} position-relative`} id="basic-tab" aria-current="page" href="#">
-                                                <span className="position-absolute top-50 translate-middle badge bg-secondary">1</span> 
-                                                Basic
-                                            </span>
+                                            
+                                            { (!this.state.fields.title.valid || !this.state.fields.thumbnail.valid)
+                                                ||
+                                                <span className={`nav-link ${this.state.activeTabName === 'basic' ? 'active' : ''} position-relative valid`} id="basic-tab" aria-current="page" href="#">
+                                                    <span className="position-absolute top-50 translate-middle badge bg-success">
+                                                        &#10003;
+                                                    </span> 
+                                                    Basic
+                                                </span>
+                                            }
+
+
+                                            {(!!this.state.fields.title.valid && !!this.state.fields.thumbnail.valid)
+                                                ||
+                                                <span className={`nav-link ${this.state.activeTabName === 'basic' ? 'active' : ''} position-relative`} id="basic-tab" aria-current="page" href="#">
+                                                    <span className="position-absolute top-50 translate-middle badge bg-secondary">1</span> 
+                                                    Basic
+                                                </span>
+                                            }   
                                         </li>
                                         <li className="nav-item" onClick={() => this.handleTabChange("general")}>
-                                            <span className={`nav-link ${this.state.activeTabName === 'general' ? 'active' : ''} position-relative`} id="general-tab">
-                                                <span className="position-absolute top-50 translate-middle badge bg-secondary">2</span> 
-                                                General
-                                            </span>
+                                            {(!this.state.fields.shortDescription.valid || !this.state.fields.startTime.valid || !this.state.fields.endTime.valid)
+                                                ||
+                                                <span className={`nav-link valid ${this.state.activeTabName === 'general' ? 'active' : ''} position-relative`} id="general-tab">
+                                                    <span className="position-absolute top-50 translate-middle badge bg-success"> &#10003;</span> 
+                                                    General
+                                                </span>
+                                            }
+                                            
+                                            {(!!this.state.fields.shortDescription.valid && !!this.state.fields.startTime.valid && !!this.state.fields.endTime.valid)
+                                                ||
+                                                <span className={`nav-link ${this.state.activeTabName === 'general' ? 'active' : ''} position-relative`} id="general-tab">
+                                                    <span className="position-absolute top-50 translate-middle badge bg-secondary">2</span> 
+                                                    General
+                                                </span>
+                                            }
                                         </li>
                                         <li className="nav-item" onClick={() => this.handleTabChange("detailed")}>
-                                            <span className={`nav-link ${this.state.activeTabName === 'detailed' ? 'active' : ''} position-relative`} id="detailed-tab">
-                                                <span className="position-absolute top-50 translate-middle badge bg-secondary">3</span> 
-                                                Detailed
-                                            </span>
+                                            {(!this.state.fields.description.valid)
+                                                ||
+                                                <span className={`nav-link valid ${this.state.activeTabName === 'detailed' ? 'active' : ''} position-relative`} id="detailed-tab">
+                                                    <span className="position-absolute top-50 translate-middle badge bg-successs">&#10003;</span> 
+                                                    Detailed
+                                                </span>
+                                            }
+
+                                            {(!!this.state.fields.description.valid)
+                                                ||
+                                                <span className={`nav-link ${this.state.activeTabName === 'detailed' ? 'active' : ''} position-relative`} id="detailed-tab">
+                                                    <span className="position-absolute top-50 translate-middle badge bg-secondary">3</span> 
+                                                    Detailed
+                                                </span>
+                                            }
                                         </li>
                                     </ul>
 
