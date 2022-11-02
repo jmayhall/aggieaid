@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class FileStorageServiceImpl implements FileStorageService {
         try {
             if(!Files.exists(root)) {
                 Files.createDirectory(root);
+                Resource resource = new ClassPathResource("Aggie Aid Logo.jpg");
+                Path filePath = this.root.resolve("bbb31688-5af8-11ed-9b6a-0242ac120002");
+                Files.copy(resource.getInputStream(), filePath);
             }
         } catch (IOException e) {
             throw new RuntimeException("Could not initialize folder for upload!");

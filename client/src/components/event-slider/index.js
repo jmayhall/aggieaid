@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import Slider from "react-slick";
 import './styles.css';
 import EventThumbnail from '../event-thumbnail';
@@ -8,7 +8,7 @@ import APIPaths from "../../constants/apipath.constants";
 
 export default function EventSlider() {
 
-  const [settings, setSettings] = React.useState({ 
+  const protoState = { 
     dots: false,
     infinite: true,
     speed: 500,
@@ -21,31 +21,29 @@ export default function EventSlider() {
       : 4,
     slidesToScroll: 1,
     arrows: true,
-    center: true,
     cssEase: 'ease-in-out',
     events: []
-  });
+  }
 
-  useEffect(() => {
+
+  const [state, setSate] = React.useState(protoState);
+
+  const fetchEvents = useCallback(() => {
     ApiService.get(APIPaths.EVENTS).then(r => {
         r.json().then(events => {
-            setSettings({events});
+            setSate({...protoState, events});
         })
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-  
+    fetchEvents()
+  }, [fetchEvents]);
+
+  useEffect(() => {
     const handleResize = () => {
-      setSettings({
-        slidesToShow: window.innerWidth < Layout.MD_BREAK_POINT 
-          ? 1
-          : window.innerWidth < Layout.XL_BREAK_POINT
-          ? 2
-          : window.innerWidth < Layout.XXL_BREAK_POINT
-          ? 3
-          : 4
-      });
+      setSate({...protoState, events: state.events});
     }
     
     window.addEventListener('resize', handleResize);
@@ -54,16 +52,16 @@ export default function EventSlider() {
      window.removeEventListener('resize', handleResize);
     };
     
-  }, []);
+  });
 
   return (
     <div className='EventSlider container'>
 
       <h2 className="text-center mb-4 text-dark">Checkout These Upcoming Events</h2>
 
-      <Slider {...settings}>
+      <Slider {...state}>
         {
-            !!settings.events ? settings.events.map(event =>  
+            !!state.events ? state.events.map(event =>  
                 <div key={event.id}>
                     <EventThumbnail
                       title={event.title}
