@@ -10,6 +10,7 @@ import EventService from '../../service/event.service';
 import AuthService from '../../service/auth.service';
 import EventThumbnail from '../event-thumbnail';
 import EventResult from '../event-result';
+import EventDetailsComponent from '../event-details';
 
 class CreateEventComponent extends React.Component {
 
@@ -319,30 +320,10 @@ class CreateEventComponent extends React.Component {
                                     {this.state.formError}
                                 </div>
 
-                                <ul className="nav nav-pills nav-fill mt-2 mb-5">
-                                    <li className="nav-item" onClick={() => this.handleTabChange("basic")}>
-                                        <span className={`nav-link ${this.state.activeTabName === 'basic' ? 'active' : ''} position-relative`} id="basic-tab" aria-current="page" href="#">
-                                            <span className="position-absolute top-50 translate-middle badge bg-secondary">1</span> 
-                                            Basic
-                                        </span>
-                                    </li>
-                                    <li className="nav-item" onClick={() => this.handleTabChange("general")}>
-                                        <span className={`nav-link ${this.state.activeTabName === 'general' ? 'active' : ''} position-relative`} id="general-tab">
-                                            <span className="position-absolute top-50 translate-middle badge bg-secondary">2</span> 
-                                            General
-                                        </span>
-                                    </li>
-                                    <li className="nav-item" onClick={() => this.handleTabChange("detailed")}>
-                                        <span className={`nav-link ${this.state.activeTabName === 'detailed' ? 'active' : ''} position-relative`} id="detailed-tab">
-                                            <span className="position-absolute top-50 translate-middle badge bg-secondary">3</span> 
-                                            Detailed
-                                        </span>
-                                    </li>
-                                </ul>
                                 <div className="tab-content" id="create-event-basic-tab-content">
                                     <div className={`tab-pane fade ${this.state.activeTabName === 'basic' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
 
-                                        <div className={`form-group`}>
+                                        <div className={`form-group my-3`}>
                                             <label htmlFor="titleInput">{this.state.fields.title.displayName}</label>
                                             <input  name="title" 
                                                     type="text" 
@@ -410,7 +391,7 @@ class CreateEventComponent extends React.Component {
                                             </div>
                                         </div>
 
-                                        <div className={`form-group`}>
+                                        <div className={`form-group  my-3`}>
                                             <label htmlFor="dateInput">{this.state.fields.date.displayName}</label>
                                             <div className='react-datepicker-wrapper'>
                                                 <DatePicker
@@ -437,7 +418,7 @@ class CreateEventComponent extends React.Component {
                                                     <label htmlFor="startTimeInput">{this.state.fields.startTime.displayName}</label>
                                                     <input  name="startTime" 
                                                             type="time"
-                                                            step="3600"
+                                                            step="600"
                                                             className={`form-control ${this.state.fields.startTime.wasValidated ? this.state.fields.startTime.valid ? 'is-valid' : 'is-invalid' : ''}`}
                                                             id="startTimeInput" 
                                                             aria-describedby="startTimeHelp startTimeFeedBack" 
@@ -460,7 +441,7 @@ class CreateEventComponent extends React.Component {
                                                     <label htmlFor="endTimeInput">{this.state.fields.endTime.displayName}</label>
                                                     <input  name="endTime" 
                                                             type="time"
-                                                            step="3600000"
+                                                            step="600"
                                                             className={`form-control ${this.state.fields.endTime.wasValidated ? this.state.fields.endTime.valid ? 'is-valid' : 'is-invalid' : ''}`}
                                                             id="endTimeInput" 
                                                             aria-describedby="endTimeHelp endTimeFeedBack" 
@@ -530,8 +511,33 @@ class CreateEventComponent extends React.Component {
                                         </div>
                                         
                                     </div>
-                                </div>                                
-                                <button type="submit" className="btn btn-primary action mt-auto" disabled={!this.state.isFormValid}>Create Event</button>
+                                </div>
+
+                                <div className='mt-auto'>
+                                    <ul className="nav nav-pills nav-fill my-3">
+                                        <li className="nav-item" onClick={() => this.handleTabChange("basic")}>
+                                            <span className={`nav-link ${this.state.activeTabName === 'basic' ? 'active' : ''} position-relative`} id="basic-tab" aria-current="page" href="#">
+                                                <span className="position-absolute top-50 translate-middle badge bg-secondary">1</span> 
+                                                Basic
+                                            </span>
+                                        </li>
+                                        <li className="nav-item" onClick={() => this.handleTabChange("general")}>
+                                            <span className={`nav-link ${this.state.activeTabName === 'general' ? 'active' : ''} position-relative`} id="general-tab">
+                                                <span className="position-absolute top-50 translate-middle badge bg-secondary">2</span> 
+                                                General
+                                            </span>
+                                        </li>
+                                        <li className="nav-item" onClick={() => this.handleTabChange("detailed")}>
+                                            <span className={`nav-link ${this.state.activeTabName === 'detailed' ? 'active' : ''} position-relative`} id="detailed-tab">
+                                                <span className="position-absolute top-50 translate-middle badge bg-secondary">3</span> 
+                                                Detailed
+                                            </span>
+                                        </li>
+                                    </ul>
+
+                                    <button type="submit" className="btn btn-primary action mt-auto" disabled={!this.state.isFormValid}>Create Event</button>
+                                </div>
+                                
                             </form>
                         </div>
                     </div>
@@ -559,12 +565,25 @@ class CreateEventComponent extends React.Component {
                                         offsetY={this.state.fields.thumbnailOffsetY.value} 
                                         offsetZoom={this.state.fields.thumbnailOffsetZoom.value}
                                         date={this.state.fields.date.value}
-                                        timeStart={this.state.fields.startTime.value.split(":")[0]}
-                                        timeEnd={this.state.fields.endTime.value.split(":")[0]}>
+                                        timeStart={this.state.fields.startTime.value}
+                                        timeEnd={this.state.fields.endTime.value}>
                                     </EventResult>
                                 </div>
-                                <div className={`tab-pane fade ${this.state.activeTabName === 'detailed' ? 'active show' : ''}`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
-                                    
+                                <div className={`tab-pane fade ${this.state.activeTabName === 'detailed' ? 'active show' : ''} w-100 h-100`} id="create-event-basic" role="tabpanel" aria-labelledby="basic-tab">
+                                    <EventDetailsComponent
+                                        title={this.state.fields.title.value}
+                                        username={AuthService.getCurrentUser().username}
+                                        shortDescription={this.state.fields.shortDescription.value}
+                                        description={this.state.fields.description.value}
+                                        volunteers={this.state.fields.volunteers.value}
+                                        preview={this.state.previewUrl} 
+                                        offsetX={this.state.fields.thumbnailOffsetX.value} 
+                                        offsetY={this.state.fields.thumbnailOffsetY.value} 
+                                        offsetZoom={this.state.fields.thumbnailOffsetZoom.value}
+                                        date={this.state.fields.date.value}
+                                        timeStart={this.state.fields.startTime.value}
+                                        timeEnd={this.state.fields.endTime.value}
+                                    ></EventDetailsComponent>
                                 </div>
                             </div>
                         </div>

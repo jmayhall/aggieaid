@@ -2,13 +2,20 @@ import React from 'react';
 import './styles.css'
 import APIPaths from '../../constants/apipath.constants';
 
-export default class EventThumbnailComponent extends React.Component {
+export default class EventResultComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        if(true) {
-            
-        }
+        this.formatTime = this.formatTime.bind(this);
+    }
+
+    formatTime(rawTime) {
+        let time = !!rawTime ? new Date().setHours(rawTime.split(":")[0],rawTime.split(":")[1]) : Date.now();
+        return new Intl.DateTimeFormat('default', {
+            hour12: true,
+            hour: 'numeric',
+            minute: '2-digit'
+        }).format(time);
     }
 
     render() {
@@ -30,11 +37,14 @@ export default class EventThumbnailComponent extends React.Component {
                             </div>
                         </div>
                         <div className='row'>
-                            <div className='col d-flex align-items-end'>
+                            <div className='col-7 d-flex align-items-end'>
                                 <small className="text-muted"><i className="bi bi-people-fill"></i> {this.props.currentVolunteers || 0} / {this.props.volunteers || 5}</small>
-                                <small className="text-muted"><i className="bi bi-clock ms-3"></i> {new Date(this.props.date).toLocaleDateString() || "11.6.83"} @ {this.props.timeStart || "12pm"}-{this.props.timeEnd || "1pm"}</small>
+                                <small className="text-muted"><i className="bi bi-clock ms-3"></i> 
+                                    {new Date(this.props.date).toLocaleDateString('default', { year: '2-digit', month: 'numeric', day: 'numeric' }) || "11.6.83"} @ 
+                                    {this.formatTime(this.props.timeStart) || "12pm"}-
+                                    {this.formatTime(this.props.timeEnd) || "1pm"}</small>
                             </div>
-                            <div className='col d-flex justify-content-end'>
+                            <div className='col-5 d-flex justify-content-end'>
                                 <button className="btn btn-secondary">More Info</button>
                                 <button className="btn btn-primary action ms-2">Volunteer</button> 
                             </div>

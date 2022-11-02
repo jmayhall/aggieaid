@@ -3,20 +3,20 @@
     background-image:  radial-gradient(farthest-corner at 1000% 83%, #D6D3C4, #707070);
 }
 
-#team {
+.AboutUsComponent #team {
     margin-top: 100px;
 }
 
-.TeamMemberComponent {
+.AboutUsComponent .TeamMemberComponent {
     background-color: #D6D3C4;
     min-height: 250px;
 }
 
-.TeamMemberComponent:nth-child(even) {
+.AboutUsComponent .TeamMemberComponent:nth-child(even) {
     background-color: #F6F6F6;
 }
 
-.bio {
+.AboutUsComponent .bio {
     border-left: 3px solid #141414;
     padding: 5px 15px;
 }

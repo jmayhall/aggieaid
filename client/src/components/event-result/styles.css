@@ -1,3 +1,16 @@
 .EventResultComponent .action {
     max-width: 100px;
 }
+
+.EventResultComponent picture {
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 2px;
+}
+
+.EventResultComponent .btn-secondary {
+    min-width: 70px;
+}
