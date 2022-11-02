@@ -7,7 +7,9 @@ import jeffPort from '../shared/images/JeffPortrait.jpg';
 import ryanPort from '../shared/images/RyanPortrait.jpg';
 import jacobPort from '../shared/images/Jacob.jpg';
 
-
+/*
+*   The page component for the About Us section.
+*/
 export default class AboutUsComponent extends React.Component {
     render() {
         return  (
