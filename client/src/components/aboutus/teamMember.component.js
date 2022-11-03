@@ -2,6 +2,18 @@ import React from 'react';
 import './styles.css'
 import placeholder from '../shared/images/placeholder.svg';
 
+/**
+ * Component used in the About Us page component to render a team member.
+ * 
+ * @typedef {object} Props
+ * @prop {string} portrait
+ * @prop {string} fullName
+ * @prop {string} bio
+ * @prop {string} email
+ * @prop {string} fullName
+ * 
+ * @extends {Component<Props>}
+ */
 export default class TeamMemberComponent extends React.Component {
     render() {
         return  (

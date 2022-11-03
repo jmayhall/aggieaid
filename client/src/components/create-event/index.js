@@ -12,6 +12,11 @@ import EventThumbnail from '../event-thumbnail';
 import EventResult from '../event-result';
 import EventDetailsComponent from '../event-details';
 
+/**
+ * Page component for creating an Event
+ *
+ * @extends {Component<Props>}
+ */
 class CreateEventComponent extends React.Component {
 
     constructor(props) {
@@ -181,7 +186,7 @@ class CreateEventComponent extends React.Component {
                         this.state.fields.description.value,
                         this.state.fields.shortDescription.value,
                         AuthService.getCurrentUser().id
-                    ). then(createResponse => {
+                    ).then(createResponse => {
                         if(createResponse.ok) {
                             this.props.navigate('/');
                         } else {

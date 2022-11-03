@@ -7,13 +7,16 @@ import jeffPort from '../shared/images/JeffPortrait.jpg';
 import ryanPort from '../shared/images/RyanPortrait.jpg';
 import jacobPort from '../shared/images/Jacob.jpg';
 
-/*
-*   The page component for the About Us section.
-*/
+/**
+ * Page component for showing the About Us content
+ * 
+ * @extends {Component<Props>}
+ */
 export default class AboutUsComponent extends React.Component {
     render() {
         return  (
             <div className="AboutUsComponent">
+                {foo}
                 <div className="container">
                     <div className="mission p-4 p-md-5 my-5 mb-4 rounded">
                         <div className="col-md-6 px-0">
