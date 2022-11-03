@@ -107,9 +107,17 @@
     color: #50565d;
 }
 
+.CreateEventComponent .nav-pills .nav-link.valid:not(.active) {
+    color: #198754;
+}
+
 
 .CreateEventComponent .nav-pills .nav-link.active {
     background-color: #50565d;
+}
+
+.CreateEventComponent .nav-pills .nav-link.valid.active {
+    background-color: #198754
 }
 
 .CreateEventComponent .nav-link .badge {
