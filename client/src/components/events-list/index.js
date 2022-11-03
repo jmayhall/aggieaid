@@ -27,7 +27,7 @@ export default class EventsListComponent extends React.Component {
 
     render() {
         return  (
-            <div className="UsersComponent container">
+            <div className="EventsListComponent container">
                 <button type="button" className="btn btn-primary" onClick={this.handleClick}>List Events</button>
                 {
                     this.state.events.map(event =><div className='my-2'>

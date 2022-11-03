@@ -9,5 +9,5 @@ test('renders UserContextComponnent container', () => {
         <UserContextComponnent></UserContextComponnent>
     </Router>
   );
-  expect(container.getElementsByClassName('UserContextComponnent').length).toBe(1);
+  expect(container.getElementsByClassName('UserContextComponent').length).toBe(1);
 });
