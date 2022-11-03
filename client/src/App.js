@@ -9,6 +9,7 @@ import FindEventComponent from './components/find-event';
 import AboutUsComponent from './components/aboutus';
 import RequireAuth from './components/require-auth';
 import AuthService from './service/auth.service';
+import ErrorComponent from './components/error'
 
 class App extends Component {
 
@@ -24,7 +25,6 @@ class App extends Component {
       <div className="App">
         <HeaderComponent></HeaderComponent>
         <Routes>
-          <Route path="*" element={<HeaderComponent />} />
           <Route path="/" element={<HomeComponent />} />
           <Route path="/home" element={<HomeComponent />} />
           <Route path="/login" element={<SignInUpComponent activeTab='login' />} />
@@ -36,6 +36,7 @@ class App extends Component {
           } />
           <Route path="/find-event" element={<FindEventComponent />} />
           <Route path="/about-us" element={<AboutUsComponent />} />
+          <Route path="*" element={<ErrorComponent errorCode="404" errorMessage="The page you are looking for is not found." />} />
         </Routes>
       </div>
     )
