@@ -68,6 +68,8 @@ public class UserEntity implements User, UserDetails {
     @Builder.Default
     private List<EventEntity> sponsoredEvents = new ArrayList<>();
 
+    private boolean enabled;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // TODO Auto-generated method stub
@@ -94,8 +96,7 @@ public class UserEntity implements User, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        // TODO Auto-generated method stub
-        return true;
+        return this.enabled;
     }
     
 }

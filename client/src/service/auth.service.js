@@ -13,7 +13,7 @@ export default class AuthService {
 
         reqPromise.then(r => {
             if(r.ok) {
-                r.json().then(u => {
+                r.clone().json().then(u => {
                     localStorage.setItem(StorageKeys.USER, JSON.stringify(u));
                     localStorage.setItem(StorageKeys.KNOWN_MACHINE, true);
                     window.dispatchEvent( new Event(Events.AUTH_CHANGE));

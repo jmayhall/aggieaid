@@ -53,7 +53,11 @@ class LoginComponent extends React.Component {
             .then(res => {
                 if(res.ok) {
                     this.setState({formError: undefined}, () => {
-                        this.props.navigate('/');
+                        res.clone().json().then(r => {
+                            this.props.navigate(r.enabled ? '/' : '/verify-email');
+                        });
+                       
+                       
                     });
                 } else {
                     res.text().then(e => {

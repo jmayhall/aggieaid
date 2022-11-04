@@ -1,5 +1,6 @@
 package edu.tamu.aggieaid.api.controller.advice;
 
+import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
@@ -42,6 +43,19 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(EventCreationException.class)
     public ResponseEntity<ErrorDTO> handleEventCreationException(EventCreationException e) {
+        if (logger.isDebugEnabled()) {
+            e.printStackTrace();
+        }
+        logger.warn(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ErrorDTO.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message(e.getMessage())
+                .build());
+    }
+
+    @ExceptionHandler(MessagingException.class)
+    public ResponseEntity<ErrorDTO> handleRegisterUserException(MessagingException e) {
         if (logger.isDebugEnabled()) {
             e.printStackTrace();
         }

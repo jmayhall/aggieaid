@@ -51,5 +51,7 @@ public class JwtDTO {
     private Date expiration;
     
     private List<String> roles;
+
+    private boolean enabled;
 }
 

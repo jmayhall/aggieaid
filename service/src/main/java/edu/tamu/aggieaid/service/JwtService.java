@@ -1,4 +1,4 @@
-package edu.tamu.aggieaid.utils;
+package edu.tamu.aggieaid.service;
 
 import java.security.SignatureException;
 import java.util.Date;
@@ -17,10 +17,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtService {
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
 
-    @Value("${app.jwtSecret}")
+    @Value("${app.jwt.secret}")
     private String jwtSecret;
 
-    @Value("${app.jwtExpirationMs}")
+    @Value("${app.jwt.expirationMs}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {

@@ -4,9 +4,10 @@ INSERT INTO USERS (
     EMAIL, 
     NAME, 
     PASSWORD, 
-    USERNAME
+    USERNAME,
+    ENABLED
 ) VALUES 
-('4a0fd363-e220-4298-b484-d1be1860886c', 'aggiejack@tamu.edu', 'Aggie Jack', '$2a$10$gL1K5Ng1E9Tk2XJW8tfcC.RdMfFw7oRTYJf6W3dV3y8D3eZPJ2BDW', 'aggiejack');
+('4a0fd363-e220-4298-b484-d1be1860886c', 'aggiejack@tamu.edu', 'Aggie Jack', '$2a$10$gL1K5Ng1E9Tk2XJW8tfcC.RdMfFw7oRTYJf6W3dV3y8D3eZPJ2BDW', 'aggiejack', true);
 
 
 INSERT INTO EVENT_ENTITY (

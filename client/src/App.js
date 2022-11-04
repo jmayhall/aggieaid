@@ -10,6 +10,7 @@ import AboutUsComponent from './components/aboutus';
 import RequireAuth from './components/require-auth';
 import AuthService from './service/auth.service';
 import ErrorComponent from './components/error'
+import VerifyEmailComponent from './components/verify-email';
 
 class App extends Component {
 
@@ -36,6 +37,11 @@ class App extends Component {
           } />
           <Route path="/find-event" element={<FindEventComponent />} />
           <Route path="/about-us" element={<AboutUsComponent />} />
+          <Route path="/verify-email" element={
+            <RequireAuth>
+              <VerifyEmailComponent />
+            </RequireAuth>
+          } />
           <Route path="*" element={<ErrorComponent errorCode="404" errorMessage="The page you are looking for is not found." />} />
         </Routes>
       </div>

@@ -28,5 +28,7 @@ public class UserDTO implements User {
     private String email;
 
     List<@Pattern(regexp=ValidationPaterns.VALID_UUID, message=ValidationsMessages.OWNER_NOT_VALID_UUID) UUID> sponsoredEvents;
+
+    private boolean enabled;
     
 }

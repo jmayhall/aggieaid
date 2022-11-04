@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import edu.tamu.aggieaid.utils.JwtService;
+import edu.tamu.aggieaid.service.JwtService;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 

@@ -1,14 +1,21 @@
 package edu.tamu.aggieaid.api.controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import javax.mail.MessagingException;
 import javax.security.auth.message.AuthException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,9 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.tamu.aggieaid.api.dto.JwtDTO;
 import edu.tamu.aggieaid.api.dto.LoginDTO;
 import edu.tamu.aggieaid.api.dto.UserRegistrationDTO;
+import edu.tamu.aggieaid.constants.EmailMessages;
 import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
-import edu.tamu.aggieaid.utils.JwtService;
+import edu.tamu.aggieaid.service.EmailSenderService;
+import edu.tamu.aggieaid.service.JwtService;
 
 
 /*
@@ -53,14 +62,29 @@ public class AuthController {
     @Autowired
     JwtService jwtServie;
 
+    @Autowired
+    EmailSenderService emailSenderService;
+
+    @Autowired
+    private Environment environment;
+
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO newUserDTO) {
+    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO newUserDTO) throws MessagingException, UnknownHostException {
         userRepo.save(UserEntity.builder()
             .username(newUserDTO.getEmail().split("@", 0)[0])
             .email(newUserDTO.getEmail())
             .name(newUserDTO.getName())
             .password(encoder.encode(newUserDTO.getPassword()))
             .build());
+
+        logger.info("http://"+InetAddress.getLocalHost().getHostAddress()+":"+environment.getProperty("local.server.port"));
+
+        emailSenderService.sendSimpleMessage(
+            newUserDTO.getEmail(), 
+            EmailMessages.REGISTER_USER_SUBJECT, 
+            String.format(EmailMessages.REGISTER_USER_BODY, "http://"+InetAddress.getLocalHost().getHostAddress()+":"+environment.getProperty("local.server.port")+"/api/email/verify")
+        );
+
         return new ResponseEntity<>("201 Created", HttpStatus.CREATED);
     }
 
@@ -90,6 +114,7 @@ public class AuthController {
             .email(userDetails.getEmail())
             .roles(new ArrayList<>())
             .expiration(jwtServie.getExpirationFromJwtToken(jwt))
+            .enabled(userDetails.isEnabled())
             .build());
     }
 
