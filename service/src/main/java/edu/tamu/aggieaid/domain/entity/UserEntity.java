@@ -70,6 +70,8 @@ public class UserEntity implements User, UserDetails {
 
     private boolean enabled;
 
+    private String emailVerificationCode;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // TODO Auto-generated method stub

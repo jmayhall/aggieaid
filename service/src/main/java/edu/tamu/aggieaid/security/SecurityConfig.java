@@ -75,6 +75,9 @@ public class SecurityConfig {
 
                 .antMatchers(POST, "/api/auth/**")
                     .permitAll()
+                
+                .antMatchers(GET, "/api/auth/**")
+                    .permitAll()
 
                 .antMatchers(GET, "/", "/explorer/**")
                     .permitAll()

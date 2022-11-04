@@ -17,5 +17,6 @@ public interface User {
     public void setEmail(String email);
 
     public boolean isEnabled();
+    public void setEnabled(boolean enabled);
 
 }
