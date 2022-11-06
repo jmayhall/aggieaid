@@ -49,6 +49,7 @@ export default class ApiService {
     }
 
     static post(path, body, headers) {
+        console.log(body);
         return new Promise((resolve, reject) => {
             makeAPICall(path, 'POST', JSON.stringify(body), {...headers, 'Content-Type': 'application/json'})
                 .then(r => {

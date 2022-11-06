@@ -34,3 +34,5 @@ build/
 
 service/data/
 service/uploads/
+
+.env

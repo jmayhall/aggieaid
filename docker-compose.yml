@@ -1,0 +1,46 @@
+version: '3.2'
+services:
+
+  service:
+    build:
+      dockerfile: Dockerfile
+      context: './service'
+    image: aggieaid-service
+    environment:
+
+      # General Variables
+      - SPRING_SERVER_PORT=8080
+      - SPRING_SERVER_SERVLET_CONTEXTPATH=/
+
+      # Mail Variables
+      - SPRING_MAIL_HOST=
+      - SPRING_MAIL_PORT=587
+      - SPRING_MAIL_USERNAME=
+      - SPRING_MAIL_PASSWORD=
+      - SPRING_MAIL_TRANSPORT_PROTOCOL=
+
+      # Database Variables
+      - SPRING_H2_CONSOLE_ENABLED=false
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:./data/demo
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.h2.Driver
+      - SPRING_SQL_INIT_MODE=always
+      - SPRING_JPA_DEFERDATASOURCEINITIALIZATION=true
+      - SPRING_JPA_DATABASEPLATFORM=org.hibernate.dialect.H2Dialect
+      - SPRING_JPA_GENERATEDDL=true
+      - SPRING_JPA_HIBERNATE_DDLAUTO=create-drop
+
+    ports:
+      - 8080:8080
+
+  client:
+    build:
+      dockerfile: Dockerfile
+      context: './client'
+    image: aggieaid-client
+    ports:
+      - 80:80
+    environment:
+      - SERVICE_URL=http://localhost:8080
+

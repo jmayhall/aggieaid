@@ -1,0 +1,12 @@
+<div style="width: 100%%; padding: 25px; background-color: #efefef;">
+    <h1>Welcome to Aggie Aid</h1>
+
+    <p> Please use the following code to verify you email address</p>
+
+    <div style="padding: 5px; width: 250px; background-color: #500000; border-radius: 3px; color: white; text-align: center;">
+        <h3>%s</h3>
+    </div>
+
+    <p>Thanks you!</p>
+
+</div>

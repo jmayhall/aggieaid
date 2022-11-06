@@ -5,9 +5,11 @@ import javax.validation.constraints.Pattern;
 
 import edu.tamu.aggieaid.constants.ValidationPaterns;
 import edu.tamu.aggieaid.constants.ValidationsMessages;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class LoginDTO {
 
     @NotBlank(message = ValidationsMessages.EMAIL_NULL)

@@ -24,6 +24,26 @@ export default class AuthService {
         return reqPromise;
     }
 
+    static async verifyEmail(email, verificationCode, password) {
+        const reqPromise = ApiService.post(APIPaths.VERIFY_EMAIL, {
+            email: email,
+            verificationCode: verificationCode,
+            password:  window.btoa(password)
+        });
+
+        reqPromise.then(r => {
+            if(r.ok) {
+                r.clone().json().then(u => {
+                    localStorage.setItem(StorageKeys.USER, JSON.stringify(u));
+                    localStorage.setItem(StorageKeys.KNOWN_MACHINE, true);
+                    window.dispatchEvent( new Event(Events.AUTH_CHANGE));
+                })
+            }
+        });
+
+        return reqPromise;
+    }
+
     static logout() {
         localStorage.removeItem(StorageKeys.USER);
         window.dispatchEvent( new Event(Events.AUTH_CHANGE) );

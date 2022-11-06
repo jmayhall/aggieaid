@@ -4,6 +4,7 @@ const APIPaths = {
     
     // Auth
     LOGIN: 'api/auth/login',
+    VERIFY_EMAIL: 'api/auth/email/verify',
     REGISTER: 'api/auth/register',
     USERS: 'users',
 
