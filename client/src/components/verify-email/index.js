@@ -20,7 +20,7 @@ class VerifyEmailComponent extends React.Component {
             formError: undefined,
             fields: {
                 email: {
-                    value: AuthService.getCurrentUser().email,
+                    value: AuthService.getCurrentUser()?.email,
                     displayName: 'Email',
                     valid: true,
                     validations: {
