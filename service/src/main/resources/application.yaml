@@ -1,12 +1,12 @@
 
 spring:
   mail:
-    host: smtp-relay.sendinblue.com
-    port: 587
-    username: howmanyaggies@gmail.com
-    password: VUIBrsvdZMywKm5A
+    host: 
+    port: 
+    username: 
+    password: 
     transport:
-      protocol: smtp
+      protocol: 
     properties:
       mail:
         smtp:
@@ -47,7 +47,7 @@ spring:
 # App Properties
 app:
   email:
-    from: noreply@aggieaid.com
+    from: huff@tamu.edu
   jwt:
     secret: secretsecret
     expirationMs: 6000000

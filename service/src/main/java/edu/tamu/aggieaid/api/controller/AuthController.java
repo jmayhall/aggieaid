@@ -1,8 +1,12 @@
 package edu.tamu.aggieaid.api.controller;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -17,7 +21,11 @@ import org.apache.logging.log4j.message.ReusableMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +34,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.tamu.aggieaid.api.dto.EmailVerificationDTO;
 import edu.tamu.aggieaid.api.dto.JwtDTO;
 import edu.tamu.aggieaid.api.dto.LoginDTO;
 import edu.tamu.aggieaid.api.dto.UserRegistrationDTO;
@@ -40,8 +51,11 @@ import edu.tamu.aggieaid.constants.EmailMessages;
 import edu.tamu.aggieaid.domain.User;
 import edu.tamu.aggieaid.domain.entity.UserEntity;
 import edu.tamu.aggieaid.domain.repo.UserRepo;
+import edu.tamu.aggieaid.exceptions.EmailVerificationException;
 import edu.tamu.aggieaid.service.EmailSenderService;
 import edu.tamu.aggieaid.service.JwtService;
+import edu.tamu.aggieaid.utils.RandomGeneration;
+import lombok.extern.java.Log;
 
 
 /*
@@ -71,13 +85,13 @@ public class AuthController {
     @Autowired
     EmailSenderService emailSenderService;
 
-    @Autowired
-    private Environment environment;
+    @Value("classpath:verificationEmailTemplate.template")
+    private Resource verificationEmailTemplate;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO newUserDTO) throws MessagingException, UnknownHostException {
+    public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDTO newUserDTO) throws MessagingException, IOException {
 
-        String emailVerificationCode = UUID.randomUUID().toString();
+        String emailVerificationCode = RandomGeneration.randomString(8);
 
         userRepo.save(UserEntity.builder()
             .username(newUserDTO.getEmail().split("@", 0)[0])
@@ -87,33 +101,40 @@ public class AuthController {
             .emailVerificationCode(emailVerificationCode)
             .build());
 
-        String emailLink = "http://"+InetAddress.getLocalHost().getHostAddress()+":"+environment.getProperty("local.server.port")+"/api/auth/email/verify?code="+emailVerificationCode;
-
-        logger.info(emailLink);
+        String msg = StreamUtils.copyToString(verificationEmailTemplate.getInputStream(), Charset.defaultCharset());
 
         emailSenderService.sendSimpleMessage(
             newUserDTO.getEmail(), 
             EmailMessages.REGISTER_USER_SUBJECT, 
-            String.format(EmailMessages.REGISTER_USER_BODY, emailLink)
+            String.format(msg, emailVerificationCode)
         );
 
         return new ResponseEntity<>("201 Created", HttpStatus.CREATED);
     }
 
-    @GetMapping("/email/verify")
-    public ResponseEntity<Void> verifyEmail(@RequestParam String code) {
+    @PostMapping("/email/verify")
+    public ResponseEntity<JwtDTO> verifyEmail(@Valid @RequestBody EmailVerificationDTO emailVerificationDTO) throws EmailVerificationException, AuthException {
 
-        User user = userRepo.findByEmailVerificationCode(code)
-            .orElseThrow(() -> new UsernameNotFoundException("User Not Found for code: " + code));
-
-        user.setEnabled(true);
-
-        userRepo.save((UserEntity) user);
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(emailVerificationDTO.getEmail(), emailVerificationDTO.getPassword()));
         
-        return ResponseEntity
-            .status(HttpStatus.FOUND)
-            .location(URI.create(String.format("%s://%s/login", "http", "localhost:3000")))
-            .build();
+        if(Objects.isNull(authentication) || !authentication.isAuthenticated()) {
+            throw new AuthException("Authentication Error");
+        }
+
+        UserEntity userDetails = (UserEntity) authentication.getPrincipal();   
+
+        if(userDetails.getEmailVerificationCode().equals(emailVerificationDTO.getVerificationCode())) {
+            userDetails.setEnabled(true);
+            userRepo.save((UserEntity) userDetails);
+        } else {
+            throw new EmailVerificationException("The verification code was not valid");
+        }
+
+        return authenticateUser(LoginDTO.builder()
+            .email(emailVerificationDTO.getEmail())
+            .password(emailVerificationDTO.getPassword())
+            .build());
     }
 
     @PostMapping("/login")
