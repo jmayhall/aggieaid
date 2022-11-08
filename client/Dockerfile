@@ -1,4 +1,4 @@
-# This should test that new commits will update to AWS
+# This should test that new commits will update to AWS via the AWS-Sync Action in Github
 FROM node:16-alpine as builder
 # Set the working directory to /app inside the container
 WORKDIR /app
