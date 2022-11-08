@@ -13,8 +13,8 @@ jobs:
       - name: Generate Deploymnet Package
         run: zip -r deploy.zip * -x "**node_modules**"
         
-      - Get timestamp
-        uses: gerred/actions/current-time_master
+      - name: Get timestamp
+        uses: gerred/actions/current-time@master
         id: current-time
         
       - name: Run string replace
