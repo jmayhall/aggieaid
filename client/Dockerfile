@@ -1,4 +1,4 @@
-# Second Update to Dockerfile
+# This should test that new commits will update to AWS
 FROM node:16-alpine as builder
 # Set the working directory to /app inside the container
 WORKDIR /app
